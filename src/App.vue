@@ -4,6 +4,11 @@
       <div class="navbar-logo">Ziro</div>
       <ul class="navbar-links">
         <li>
+          <router-link to="/fontes-dados" active-class="active">
+            Minhas Fontes de Dados
+          </router-link>
+        </li>
+        <li>
           <router-link to="/movimentacao-financeira" active-class="active">
             Movimentação Financeira
           </router-link>
@@ -15,7 +20,10 @@
         </li>
       </ul>
     </nav>
-    <main class="main-content">
+    <main
+      class="main-content"
+      :style="{ padding: mostrarBarraNavegacao ? '2rem' : '0' }"
+    >
       <router-view />
     </main>
   </div>
@@ -46,7 +54,7 @@ export default class App extends Vue {
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2rem;
-  background-color: #ffffff;
+  background-color: var(--color-bg);
   border-bottom: 1px solid #e0e0e0;
   font-family: "Inter", sans-serif;
 }
@@ -54,7 +62,7 @@ export default class App extends Vue {
 .navbar-logo {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #222;
+  color: var(--color-text);
   letter-spacing: -0.5px;
 }
 
@@ -67,7 +75,7 @@ export default class App extends Vue {
 }
 
 .navbar-links a {
-  color: #555;
+  color: #555555;
   text-decoration: none;
   font-size: 1rem;
   padding: 0.25rem 0.5rem;
@@ -76,18 +84,18 @@ export default class App extends Vue {
 }
 
 .navbar-links a:hover {
-  background-color: #f5f5f5;
-  color: #000;
+  background-color: var(--color-hover-bg);
+  color: var(--color-primary-light);
 }
 
 .navbar-links .active {
-  color: #000;
+  color: var(--color-primary-light);
   font-weight: 500;
-  border-bottom: 2px solid #000;
+  border-bottom: 2px solid var(--color-primary-light);
 }
 
 .main-content {
-  background-color: #fafafa;
+  background-color: var(--color-hover-bg);
   min-height: calc(100vh - 64px);
   font-family: "Inter", sans-serif;
 }

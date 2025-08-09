@@ -56,32 +56,34 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: "RegisterView",
-  data() {
-    return {
-      name: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-    };
-  },
-  methods: {
-    handleRegister() {
-      if (this.password !== this.confirmPassword) {
-        alert("As senhas não coincidem!");
-        return;
-      }
-      // Aqui você pode colocar a lógica real de cadastro
-      alert(`Cadastro com:\nNome: ${this.name}\nEmail: ${this.email}`);
-    },
-    goToLogin() {
-      // Redirecionar para a tela de login (exemplo)
-      this.$router.push({ name: "Login" });
-    },
-  },
-};
+<script lang="ts">
+import { Component, Vue } from "vue-facing-decorator";
+
+@Component({
+  components: {},
+  directives: {},
+  emits: [],
+})
+export default class CadastroView extends Vue {
+  private name: string = "";
+  private email: string = "";
+  private confirmPassword: string = "";
+  private password: string = "";
+
+  public handleRegister() {
+    if (this.password !== this.confirmPassword) {
+      alert("As senhas não coincidem!");
+      return;
+    }
+    // Aqui você pode colocar a lógica real de cadastro
+    alert(`Cadastro com:\nNome: ${this.name}\nEmail: ${this.email}`);
+  }
+
+  public goToLogin() {
+    // Redirecionar para a tela de login (exemplo)
+    this.$router.push({ name: "Login" });
+  }
+}
 </script>
 
 <style scoped>
