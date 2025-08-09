@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 
+import FonteDadoView from "@/views/fontedado/FonteDadoView.vue";
 import CadastroView from "@/views/login/CadastroView.vue";
 import LoginView from "@/views/login/LoginView.vue";
 import ModelagemFinanceiraView from "@/views/modelagemfinanceira/ModelagemFinanceiraView.vue";
@@ -25,6 +26,11 @@ const routes = [
     path: "/movimentacao-financeira",
     name: "Movimentação Financeira",
     component: MovimentacaoFinanceiraView,
+  },
+  {
+    path: "/fontes-dados",
+    name: "Minhas Fontes de Dados",
+    component: FonteDadoView,
   },
 ];
 

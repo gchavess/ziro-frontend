@@ -44,7 +44,7 @@ import { Component, Vue } from "vue-facing-decorator";
   directives: {},
   emits: [],
 })
-export default class App extends Vue {
+export default class LoginView extends Vue {
   private email: string = "";
   private password: string = "";
 
