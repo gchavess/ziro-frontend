@@ -72,7 +72,7 @@ select {
   background-color: var(--color-bg);
   transition: border 0.2s ease-in-out;
   appearance: none;
-  color: var(--text-color);
+  color: var(--color-text);
 }
 
 .label {
