@@ -121,7 +121,6 @@ export default class LancamentoModal extends Vue {
       return;
     }
 
-    console.log("Lançamento salvo:", this.form);
     this.$emit("salvarLancamento", this.form);
     this.$emit("modalAbertaLancamento", false);
 
