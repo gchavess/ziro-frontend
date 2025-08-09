@@ -132,7 +132,8 @@ export default class MovimentacaoFinanceiraView extends Vue {
   }
 
   public salvarLancamento() {
-    this.lancamentos.push({ ...this.novoLancamento });
+  public salvarLancamento(lancamento: Lancamento) {
+    this.lancamentos.push({ ...lancamento });
     this.fecharModal();
   }
 
