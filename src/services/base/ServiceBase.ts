@@ -25,7 +25,7 @@ export default class ServiceBase {
       }
     );
 
-    axios.interceptors.response.use(
+    this.$axios.interceptors.response.use(
       function (response) {
         return response;
       },
