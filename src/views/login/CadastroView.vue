@@ -57,6 +57,7 @@
 </template>
 
 <script lang="ts">
+import UsuarioService from "@/services/usuario/UsuarioService";
 import { Component, Vue } from "vue-facing-decorator";
 
 @Component({
@@ -70,13 +71,24 @@ export default class CadastroView extends Vue {
   private confirmPassword: string = "";
   private password: string = "";
 
-  public handleRegister() {
+  public async handleRegister() {
     if (this.password !== this.confirmPassword) {
       alert("As senhas não coincidem!");
       return;
     }
-    // Aqui você pode colocar a lógica real de cadastro
-    alert(`Cadastro com:\nNome: ${this.name}\nEmail: ${this.email}`);
+
+    try {
+      const usuario = await UsuarioService.criar({
+        nome: this.name,
+        email: this.email,
+        senha: this.password,
+      });
+      alert(`Usuário ${usuario.nome} cadastrado com sucesso!`);
+      this.goToLogin();
+    } catch (error) {
+      console.error("Erro ao cadastrar usuário:", error);
+      alert("Ocorreu um erro ao cadastrar. Tente novamente.");
+    }
   }
 
   public goToLogin() {
