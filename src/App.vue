@@ -57,12 +57,10 @@ export default class App extends Vue {
   }
 
   private validarAutenticacao() {
-    AuthService.validarToken()
-      .then()
-      .catch(() => {
-        clearToken();
-        this.$router.push({ name: "Login" });
-      });
+    AuthService.validarToken().catch(() => {
+      clearToken();
+      this.$router.push({ name: "Login" });
+    });
   }
 }
 </script>

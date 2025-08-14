@@ -51,18 +51,18 @@ export default class LoginView extends Vue {
   private password: string = "";
 
   public handleLogin() {
-    try {
-      AuthService.login({
-        email: this.email,
-        senha: this.password,
-      }).then((response) => {
+    AuthService.login({
+      email: this.email,
+      senha: this.password,
+    })
+      .then((response) => {
         const token = response.data.token;
         setToken(token);
         this.$router.push({ name: "Movimentação Financeira" });
+      })
+      .catch((error) => {
+        alert("Email ou senha inválidos.");
       });
-    } catch (error) {
-      alert("Erro ao fazer login. Verifique suas credenciais.");
-    }
   }
 
   public goToRegister() {
