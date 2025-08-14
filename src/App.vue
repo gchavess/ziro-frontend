@@ -30,6 +30,8 @@
 </template>
 
 <script lang="ts">
+import AuthService from "@/services/auth/AuthService";
+import { clearToken } from "@/store/auth";
 import { Component, Vue } from "vue-facing-decorator";
 import { useRoute } from "vue-router";
 
@@ -41,9 +43,26 @@ import { useRoute } from "vue-router";
 export default class App extends Vue {
   private route = useRoute();
 
+  mounted() {
+    this.inicializar();
+  }
+
+  private inicializar() {
+    this.validarAutenticacao();
+  }
+
   public get mostrarBarraNavegacao(): boolean {
     const nomesQueNaoMostramBarra = ["Login", "Cadastro"];
     return !nomesQueNaoMostramBarra.includes(this.route.name as string);
+  }
+
+  private validarAutenticacao() {
+    AuthService.validarToken()
+      .then()
+      .catch(() => {
+        clearToken();
+        this.$router.push({ name: "Login" });
+      });
   }
 }
 </script>
