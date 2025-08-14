@@ -37,6 +37,8 @@
 </template>
 
 <script lang="ts">
+import AuthService from "@/services/auth/AuthService";
+import { setToken } from "@/store/auth";
 import { Component, Vue } from "vue-facing-decorator";
 
 @Component({
@@ -48,10 +50,22 @@ export default class LoginView extends Vue {
   private email: string = "";
   private password: string = "";
 
-  handleLogin() {
-    alert(`Login com: ${this.email} / ${this.password}`);
+  public handleLogin() {
+    AuthService.login({
+      email: this.email,
+      senha: this.password,
+    })
+      .then((response) => {
+        const token = response.data.token;
+        setToken(token);
+        this.$router.push({ name: "Movimentação Financeira" });
+      })
+      .catch((error) => {
+        alert("Email ou senha inválidos.");
+      });
   }
-  goToRegister() {
+
+  public goToRegister() {
     this.$router.push({ name: "Cadastro" });
   }
 }
