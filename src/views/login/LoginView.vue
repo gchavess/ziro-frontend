@@ -38,7 +38,7 @@
 
 <script lang="ts">
 import AuthService from "@/services/auth/AuthService";
-import { setToken } from "@/store/auth";
+import { setAuth } from "@/store/auth";
 import { Component, Vue } from "vue-facing-decorator";
 
 @Component({
@@ -56,8 +56,8 @@ export default class LoginView extends Vue {
       senha: this.password,
     })
       .then((response) => {
-        const token = response.data.token;
-        setToken(token);
+        const dados = response.data;
+        setAuth(dados.token, dados.usuarioId.toString());
         this.$router.push({ name: "Movimentação Financeira" });
       })
       .catch((error) => {

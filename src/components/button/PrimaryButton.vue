@@ -3,7 +3,6 @@
     :type="tipo"
     :class="['btn', `btn--${cor}`, { 'btn--disabled': desabilitado }]"
     :disabled="desabilitado"
-    @click="$emit('click')"
   >
     <slot>
       <span class="btn__content">

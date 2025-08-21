@@ -31,7 +31,7 @@
 
 <script lang="ts">
 import AuthService from "@/services/auth/AuthService";
-import { clearToken } from "@/store/auth";
+import { clearAuth } from "@/store/auth";
 import { Component, Vue } from "vue-facing-decorator";
 import { useRoute } from "vue-router";
 
@@ -58,7 +58,7 @@ export default class App extends Vue {
 
   private validarAutenticacao() {
     AuthService.validarToken().catch(() => {
-      clearToken();
+      clearAuth();
       this.$router.push({ name: "Login" });
     });
   }

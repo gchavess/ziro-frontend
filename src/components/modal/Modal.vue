@@ -12,7 +12,7 @@
         <primary-button
           texto="Salvar"
           :cor="buttonColor.PRIMARIO"
-          @click="fecharModal"
+          @click="salvar"
         />
         <primary-button
           texto="Cancelar"
@@ -45,7 +45,8 @@ export default class Modal extends Vue {
   }
 
   public salvar() {
-    this.fecharModal();
+    console.log("Salvar action triggered");
+    this.$emit("salvar");
   }
 }
 </script>
