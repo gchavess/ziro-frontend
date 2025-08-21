@@ -1,6 +1,7 @@
 import { reactive } from "vue";
 
 const TOKEN_COOKIE_NAME = "auth_token";
+const USUARIO_ID_COOKIE_NAME = "usuario_logado_id";
 
 function setCookie(name: string, value: string, days = 7) {
   const expires = new Date(Date.now() + days * 864e5).toUTCString();
@@ -23,26 +24,39 @@ function deleteCookie(name: string) {
 export const authState = reactive({
   token: "" as string | null,
   isLoggedIn: false,
+  usuarioLogadoId: "" as string | null,
 });
 
-export function loadToken() {
+export function loadAuth() {
   const token = getCookie(TOKEN_COOKIE_NAME);
+  const usuarioId = getCookie(USUARIO_ID_COOKIE_NAME);
+
   if (token) {
     authState.token = token;
     authState.isLoggedIn = true;
   }
+
+  if (usuarioId) {
+    authState.usuarioLogadoId = usuarioId;
+  }
 }
 
-export function setToken(token: string) {
-  console.log("Setting token:", token);
+export function setAuth(token: string, usuarioId: string) {
+  console.log("Setting token:", token, "Usuario ID:", usuarioId);
   authState.token = token;
   authState.isLoggedIn = !!token;
+  authState.usuarioLogadoId = usuarioId;
+
   setCookie(TOKEN_COOKIE_NAME, token);
+  setCookie(USUARIO_ID_COOKIE_NAME, usuarioId);
 }
 
-// Limpa o token e remove o cookie
-export function clearToken() {
+// Limpa o token, ID e remove os cookies
+export function clearAuth() {
   authState.token = null;
   authState.isLoggedIn = false;
+  authState.usuarioLogadoId = null;
+
   deleteCookie(TOKEN_COOKIE_NAME);
+  deleteCookie(USUARIO_ID_COOKIE_NAME);
 }

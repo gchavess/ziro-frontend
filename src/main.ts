@@ -8,10 +8,10 @@ import "@/assets/styles/reset.css";
 import "@/assets/styles/theme.css";
 
 // Importação do estado de autenticação
-import { loadToken } from "@/store/auth";
+import { loadAuth } from "@/store/auth";
 
 const app = createApp(App);
-loadToken();
+loadAuth();
 
 // Usar o router
 app.use(router);
