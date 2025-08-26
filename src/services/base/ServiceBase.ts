@@ -11,12 +11,12 @@ export default class ServiceBase {
 
         config.withCredentials = true;
 
-        console.log(
-          "Token que vai ser setado no Authorization: ",
-          authState.token
-        );
         config.headers["Authorization"] = `${authState.token}`;
         config.headers["Access-Control-Allow-Origin"] = "*";
+
+        if (authState.usuarioLogadoId) {
+          config.headers["XXX-USUARIO-ID"] = authState.usuarioLogadoId;
+        }
 
         return config;
       },

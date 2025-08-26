@@ -42,7 +42,6 @@ export function loadAuth() {
 }
 
 export function setAuth(token: string, usuarioId: string) {
-  console.log("Setting token:", token, "Usuario ID:", usuarioId);
   authState.token = token;
   authState.isLoggedIn = !!token;
   authState.usuarioLogadoId = usuarioId;

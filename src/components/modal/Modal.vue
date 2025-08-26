@@ -17,11 +17,11 @@
         <primary-button
           texto="Cancelar"
           :cor="buttonColor.SECUNDARIO"
-          @click="fecharModal"
+          @click="cancelar"
         />
       </div>
 
-      <button class="modal-close" @click="fecharModal">&times;</button>
+      <button class="modal-close" @click="cancelar">&times;</button>
     </div>
   </div>
 </template>
@@ -33,6 +33,7 @@ import { Component, Prop, Vue } from "vue-facing-decorator";
 
 @Component({
   components: { PrimaryButton },
+  emits: ["cancelar", "salvar"],
 })
 export default class Modal extends Vue {
   @Prop({ type: Boolean, default: false })
@@ -40,12 +41,11 @@ export default class Modal extends Vue {
 
   public buttonColor = ButtonColor;
 
-  public fecharModal() {
-    this.$emit("modalAberta", false);
+  public cancelar() {
+    this.$emit("cancelar");
   }
 
   public salvar() {
-    console.log("Salvar action triggered");
     this.$emit("salvar");
   }
 }

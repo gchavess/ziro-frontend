@@ -1,9 +1,5 @@
 <template>
-  <modal
-    :modalAberta="modalAberta"
-    @modalAberta="$emit('modalAberta', $event)"
-    @salvar="salvar"
-  >
+  <modal :modalAberta="modalAberta" @cancelar="cancelar" @salvar="salvar">
     <template #header>
       <h2>{{ tituloModal }}</h2>
     </template>
@@ -132,14 +128,6 @@ export default class ContextoNaturezaModal extends Vue {
 
   private inicializar() {
     if (this.modoContexto && this.acao === this.acaoButtonIcon.INCLUIR) {
-      this.form = {
-        ...this.form,
-        contextoConta: {
-          id: this.contextoContaSelecionado
-            ? this.contextoContaSelecionado.id
-            : null,
-        },
-      };
       return;
     }
 
@@ -235,6 +223,11 @@ export default class ContextoNaturezaModal extends Vue {
     if (!this.modoContexto && this.acao === this.acaoButtonIcon.ALTERAR) {
       this.alterarNaturezaConta();
     }
+  }
+
+  public async cancelar() {
+    await this.resetarFormulario();
+    this.fecharModal();
   }
 
   private async criarContextoConta() {
