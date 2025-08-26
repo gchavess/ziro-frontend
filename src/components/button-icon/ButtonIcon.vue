@@ -2,7 +2,6 @@
   <div class="button-icon-wrapper">
     <button
       class="button-icon"
-      @click="$emit('click')"
       :disabled="desabilitado"
       :aria-disabled="desabilitado"
     >
@@ -22,7 +21,13 @@
 
 <script lang="ts">
 import { AcaoButtonIcon } from "@/enums/AcaoButtonIcon";
-import { mdiCircle, mdiPencil, mdiPlus, mdiTrashCan } from "@mdi/js";
+import {
+  mdiCircle,
+  mdiCogOutline,
+  mdiPencil,
+  mdiPlus,
+  mdiTrashCan,
+} from "@mdi/js";
 import { Component, Prop, Vue } from "vue-facing-decorator";
 
 @Component
@@ -38,6 +43,8 @@ export default class ButtonIcon extends Vue {
         return mdiPencil;
       case AcaoButtonIcon.EXCLUIR:
         return mdiTrashCan;
+      case AcaoButtonIcon.CONFIGURAR:
+        return mdiCogOutline;
       default:
         return mdiCircle;
     }
@@ -51,6 +58,8 @@ export default class ButtonIcon extends Vue {
         return "Alterar";
       case AcaoButtonIcon.EXCLUIR:
         return "Excluir";
+      case AcaoButtonIcon.CONFIGURAR:
+        return "Configurar";
       default:
         return "";
     }

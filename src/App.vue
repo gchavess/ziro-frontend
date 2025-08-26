@@ -113,7 +113,8 @@ export default class App extends Vue {
 
 .main-content {
   background-color: var(--color-hover-bg);
-  min-height: calc(100vh - 64px);
+  min-height: calc(100vh - 70px);
   font-family: "Inter", sans-serif;
+  height: calc(100vh - 70px);
 }
 </style>
