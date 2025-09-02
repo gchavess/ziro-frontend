@@ -3,7 +3,7 @@
     <input
       id="input-text"
       name="input-text"
-      type="text"
+      :type="type"
       :value="modelValue"
       @input="onInput"
       @focus="onFocus"
@@ -25,6 +25,7 @@ import { Component, Prop, Vue } from "vue-facing-decorator";
 export default class InputText extends Vue {
   @Prop({ type: String, default: "" }) modelValue!: string;
   @Prop({ type: String, default: "Texto" }) label!: string;
+  @Prop({ type: String, default: "text" }) type!: string;
 
   isFocused = false;
 

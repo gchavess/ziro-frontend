@@ -1,5 +1,6 @@
 import { ContaDTO } from "@/interface/conta/ContaDTO";
 import { ContaTreeNodeDTO } from "@/interface/conta/ContaTreeNodeDTO";
+import { OptionDTO } from "@/interface/option/OptionDTO";
 import ServiceBase from "@/services/base/ServiceBase";
 import { AxiosResponse } from "axios";
 
@@ -35,6 +36,12 @@ class ContaService extends ServiceBase {
 
   async excluir(id: number): Promise<AxiosResponse<void>> {
     return this.$axios.delete<void>(`${this.path}/${id}`, {});
+  }
+
+  async listarDropdown(): Promise<AxiosResponse<OptionDTO[]>> {
+    return this.$axios.get<void, AxiosResponse<OptionDTO[]>>(
+      `${this.path}/dropdown`
+    );
   }
 }
 

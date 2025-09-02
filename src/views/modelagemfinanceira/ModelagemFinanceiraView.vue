@@ -4,16 +4,19 @@
   <div class="flex gap-4 conteudo-modelagem-financeira-view">
     <div class="container-tree">
       <button-icon
+        v-if="!treeModoAssociacao"
         :desabilitado="treeModoAssociacao"
         :acao="acaoButtonIcon.INCLUIR"
         @click="abrirModalConta(acaoButtonIcon.INCLUIR)"
       />
       <button-icon
+        v-if="!treeModoAssociacao"
         :desabilitado="!itemTreeContaSelecionado || treeModoAssociacao"
         :acao="acaoButtonIcon.ALTERAR"
         @click="abrirModalConta(acaoButtonIcon.ALTERAR)"
       />
       <button-icon
+        v-if="!treeModoAssociacao"
         :desabilitado="!itemTreeContaSelecionado || treeModoAssociacao"
         :acao="acaoButtonIcon.EXCLUIR"
         @click="abrirModalConta(acaoButtonIcon.EXCLUIR)"

@@ -12,6 +12,7 @@
         <primary-button
           texto="Salvar"
           :cor="buttonColor.PRIMARIO"
+          :desabilitado="botaoSalvarDesabilitado"
           @click="salvar"
         />
         <primary-button
@@ -38,6 +39,9 @@ import { Component, Prop, Vue } from "vue-facing-decorator";
 export default class Modal extends Vue {
   @Prop({ type: Boolean, default: false })
   public modalAberta = false;
+
+  @Prop({ type: Boolean, default: false })
+  public botaoSalvarDesabilitado = false;
 
   public buttonColor = ButtonColor;
 

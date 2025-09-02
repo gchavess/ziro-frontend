@@ -120,7 +120,7 @@ export default class ContextoNaturezaModal extends Vue {
   }
 
   @Watch("modalAberta")
-  public onModalAbertaChange(newValue: boolean) {
+  onModalAbertaChange(newValue: boolean) {
     if (newValue) {
       this.inicializar();
     }
@@ -183,12 +183,14 @@ export default class ContextoNaturezaModal extends Vue {
       this.excluirNaturezaConta();
       return;
     }
+
     if (
       this.modoContexto &&
       this.acao === this.acaoButtonIcon.INCLUIR &&
       this.contextoContaSelecionado &&
       "contextoConta" in this.form &&
-      this.contextoContaSelecionado.codigo === "TODOS"
+      (this.contextoContaSelecionado.codigo === "TODOS" ||
+        this.contextoContaSelecionado.codigo === null)
     ) {
       this.criarContextoConta();
 

@@ -1,6 +1,7 @@
 <template>
   <div class="input-container">
     <input
+      class="input-currency"
       id="fname"
       name="fname"
       type="text"
@@ -97,6 +98,10 @@ export default class CurrencyInput extends Vue {
 <style>
 .input-container {
   position: relative;
+}
+
+.input-currency {
+  padding: 16px;
 }
 
 input {
