@@ -11,7 +11,7 @@
     </template>
 
     <template #body>
-      <form class="space-y-4">
+      <form class="space-y-4" v-if="acao !== acaoButtonIcon.EXCLUIR">
         <div class="formulario-lancamento">
           <input-text v-model="form.descricao" :label="'Descrição'" />
 
@@ -42,6 +42,16 @@
           </div>
         </div>
       </form>
+
+      <div v-else>
+        <p>Você tem certeza que deseja excluir este item?</p>
+        <p>
+          Descrição:
+          {{
+            lancamentoSelecionado?.descricao || lancamentoSelecionado?.descricao
+          }}
+        </p>
+      </div>
     </template>
   </modal>
 </template>
@@ -114,7 +124,8 @@ export default class LancamentoModal extends Vue {
 
     if (
       this.lancamentoSelecionado &&
-      this.acao === this.acaoButtonIcon.ALTERAR
+      (this.acao === this.acaoButtonIcon.ALTERAR ||
+        this.acao === this.acaoButtonIcon.EXCLUIR)
     ) {
       console.log("this.lancamentoSelecionado", this.lancamentoSelecionado);
       this.form = {
@@ -142,8 +153,10 @@ export default class LancamentoModal extends Vue {
         this.criarLancamento();
         break;
       case this.acaoButtonIcon.ALTERAR:
+        this.alterarLancamento();
         break;
       case this.acaoButtonIcon.EXCLUIR:
+        this.excluirLancamento();
         break;
       default:
         break;
@@ -158,6 +171,28 @@ export default class LancamentoModal extends Vue {
       })
       .catch((error) => {
         console.error("Erro ao criar contexto conta:", error);
+      });
+  }
+
+  public async alterarLancamento() {
+    await LancamentoService.alterar(this.form)
+      .then(() => {
+        this.recarregarGridLancamentos();
+        this.fecharModal();
+      })
+      .catch((error) => {
+        console.error("Erro ao alterar contexto conta:", error);
+      });
+  }
+
+  public async excluirLancamento() {
+    await LancamentoService.excluir(this.form?.id!)
+      .then(() => {
+        this.recarregarGridLancamentos();
+        this.fecharModal();
+      })
+      .catch((error) => {
+        console.error("Erro ao alterar contexto conta:", error);
       });
   }
 
