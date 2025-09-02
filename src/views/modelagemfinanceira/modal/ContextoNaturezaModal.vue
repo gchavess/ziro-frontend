@@ -38,23 +38,6 @@
         </p>
       </div>
     </template>
-
-    <!-- <template #footer>
-      <div class="flex justify-end gap-2">
-        <button
-          class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300"
-          @click="$emit('modalAberta', false)"
-        >
-          Cancelar
-        </button>
-        <button
-          class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-          @click="salvar()"
-        >
-          Salvar
-        </button>
-      </div>
-    </template> -->
   </modal>
 </template>
 
@@ -120,7 +103,7 @@ export default class ContextoNaturezaModal extends Vue {
   }
 
   @Watch("modalAberta")
-  public onModalAbertaChange(newValue: boolean) {
+  onModalAbertaChange(newValue: boolean) {
     if (newValue) {
       this.inicializar();
     }
@@ -183,12 +166,14 @@ export default class ContextoNaturezaModal extends Vue {
       this.excluirNaturezaConta();
       return;
     }
+
     if (
       this.modoContexto &&
       this.acao === this.acaoButtonIcon.INCLUIR &&
       this.contextoContaSelecionado &&
       "contextoConta" in this.form &&
-      this.contextoContaSelecionado.codigo === "TODOS"
+      (this.contextoContaSelecionado.codigo === "TODOS" ||
+        this.contextoContaSelecionado.codigo === null)
     ) {
       this.criarContextoConta();
 

@@ -1,73 +1,56 @@
 <template>
   <modal
-    :modalAberta="modalAbertaLancamento"
-    @modalAberta="$emit('modalAbertaLancamento', $event)"
+    :modalAberta="modalAberta"
+    :botaoSalvarDesabilitado="botaoSalvarDesabilitado"
+    @modalAberta="$emit('modalAberta', $event)"
+    @cancelar="cancelar"
+    @salvar="salvar"
   >
     <template #header>
       <h2>{{ tituloModal }}</h2>
     </template>
 
     <template #body>
-      <form @submit.prevent="salvarLancamento" class="space-y-4">
+      <form class="space-y-4" v-if="acao !== acaoButtonIcon.EXCLUIR">
         <div class="formulario-lancamento">
-          <div>
-            <input-text v-model="form.descricao" :label="'Descrição'" />
-          </div>
+          <input-text v-model="form.descricao" :label="'Descrição'" />
 
-          <div class="mt-4">
-            <input-select
-              v-model="form.categoria"
-              :label="'Categoria'"
-              :options="[
-                { label: 'Opção A', value: 'A' },
-                { label: 'Opção B', value: 'B' },
-              ]"
-            />
-          </div>
+          <input-text
+            v-model="form.dataVencimento"
+            :type="'date'"
+            :label="'Data de Vencimento'"
+          />
 
-          <div>
-            <input-select
-              v-model="form.tipo"
-              :label="'Tipo'"
-              :options="[
-                { label: 'Opção A', value: 'A' },
-                { label: 'Opção B', value: 'B' },
-              ]"
-            />
-          </div>
+          <input-text
+            v-model="form.dataPagamento"
+            :type="'date'"
+            :label="'Data de Pagamento'"
+          />
 
           <div>
-            <input-currency v-model="form.valor" :label="'Valor'" />
+            <input-currency v-model="form.valorBruto" :label="'Valor'" />
           </div>
 
           <div>
             <input-select
-              v-model="form.conta"
+              :key="form.conta.id"
+              v-model="form.conta.id"
               :label="'Conta'"
-              :options="[
-                { label: 'Opção A', value: 'A' },
-                { label: 'Opção B', value: 'B' },
-              ]"
+              :options="listaContas"
+              @modelValue="inputSelectValorContaAlterado"
             />
           </div>
         </div>
       </form>
-    </template>
 
-    <template #footer>
-      <div class="flex justify-end gap-2">
-        <button
-          class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300"
-          @click="$emit('modalAbertaLancamento', false)"
-        >
-          Cancelar
-        </button>
-        <button
-          class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-          @click="salvarLancamento"
-        >
-          Salvar
-        </button>
+      <div v-else>
+        <p>Você tem certeza que deseja excluir este item?</p>
+        <p>
+          Descrição:
+          {{
+            lancamentoSelecionado?.descricao || lancamentoSelecionado?.descricao
+          }}
+        </p>
       </div>
     </template>
   </modal>
@@ -79,26 +62,41 @@ import InputSelect from "@/components/input-select/InputSelect.vue";
 import InputText from "@/components/input-text/InputText.vue";
 import Modal from "@/components/modal/Modal.vue";
 import { AcaoButtonIcon } from "@/enums/AcaoButtonIcon";
-import { Component, Prop, Vue } from "vue-facing-decorator";
+import { LancamentoDTO } from "@/interface/lancamento/LancamentoDTO";
+import { OptionDTO } from "@/interface/option/OptionDTO";
+import ContaService from "@/services/conta/ContaService";
+import LancamentoService from "@/services/lancamento/LancamentoService";
+import { Component, Prop, Vue, Watch } from "vue-facing-decorator";
 
 @Component({
   components: { Modal, InputCurrency, InputText, InputSelect },
 })
 export default class LancamentoModal extends Vue {
   @Prop({ type: Boolean, default: false })
-  public modalAbertaLancamento!: boolean;
+  public modalAberta!: boolean;
 
   @Prop({ type: AcaoButtonIcon, default: "" })
   public acao!: string;
 
+  @Prop({ type: Object, default: null })
+  public lancamentoSelecionado: LancamentoDTO | null = null;
+
+  public botaoSalvarDesabilitado: boolean = false;
+
+  public listaContas: OptionDTO[] = [];
+
   public acaoButtonIcon = AcaoButtonIcon;
 
-  public form = {
+  public form: LancamentoDTO = {
+    id: null,
     descricao: "",
-    categoria: "",
-    tipo: "",
-    valor: 0,
-    conta: "",
+    observacao: "",
+    dataVencimento: "",
+    dataPagamento: "",
+    valorBruto: null,
+    conta: {
+      id: null,
+    },
   };
 
   public get tituloModal() {
@@ -114,23 +112,125 @@ export default class LancamentoModal extends Vue {
     }
   }
 
-  public salvarLancamento() {
-    // Validação básica (pode melhorar com biblioteca tipo Vuelidate ou Zod)
-    if (!this.form.descricao || !this.form.valor || !this.form.tipo) {
-      alert("Preencha todos os campos obrigatórios.");
-      return;
+  @Watch("modalAberta")
+  onModalAbertaChange(newValue: boolean) {
+    if (newValue) {
+      this.inicializar();
     }
+  }
 
-    this.$emit("salvarLancamento", this.form);
-    this.$emit("modalAbertaLancamento", false);
+  private async inicializar() {
+    await this.listarContasDropdown();
 
-    // Resetar formulário após salvar
+    if (
+      this.lancamentoSelecionado &&
+      (this.acao === this.acaoButtonIcon.ALTERAR ||
+        this.acao === this.acaoButtonIcon.EXCLUIR)
+    ) {
+      console.log("this.lancamentoSelecionado", this.lancamentoSelecionado);
+      this.form = {
+        ...this.lancamentoSelecionado,
+        conta: this.lancamentoSelecionado.conta
+          ? { ...this.lancamentoSelecionado.conta }
+          : { id: null },
+      };
+    }
+  }
+
+  private async listarContasDropdown() {
+    await ContaService.listarDropdown()
+      .then((response) => {
+        this.listaContas = response.data;
+      })
+      .catch((error) => {
+        console.error("Erro ao listar contas para dropdown:", error);
+      });
+  }
+
+  public async salvar() {
+    switch (this.acao) {
+      case this.acaoButtonIcon.INCLUIR:
+        this.criarLancamento();
+        break;
+      case this.acaoButtonIcon.ALTERAR:
+        this.alterarLancamento();
+        break;
+      case this.acaoButtonIcon.EXCLUIR:
+        this.excluirLancamento();
+        break;
+      default:
+        break;
+    }
+  }
+
+  public async criarLancamento() {
+    await LancamentoService.criar(this.form)
+      .then(() => {
+        this.recarregarGridLancamentos();
+        this.fecharModal();
+      })
+      .catch((error) => {
+        console.error("Erro ao criar contexto conta:", error);
+      });
+  }
+
+  public async alterarLancamento() {
+    await LancamentoService.alterar(this.form)
+      .then(() => {
+        this.recarregarGridLancamentos();
+        this.fecharModal();
+      })
+      .catch((error) => {
+        console.error("Erro ao alterar contexto conta:", error);
+      });
+  }
+
+  public async excluirLancamento() {
+    await LancamentoService.excluir(this.form?.id!)
+      .then(() => {
+        this.recarregarGridLancamentos();
+        this.fecharModal();
+      })
+      .catch((error) => {
+        console.error("Erro ao alterar contexto conta:", error);
+      });
+  }
+
+  public inputSelectValorContaAlterado(event: OptionDTO) {
+    if (event.value) this.form.conta.id = event.value;
+
+    if (event.children && event.children.length > 0) {
+      this.botaoSalvarDesabilitado = true;
+    } else {
+      this.botaoSalvarDesabilitado = false;
+    }
+  }
+
+  public async cancelar() {
+    await this.resetarFormulario();
+    this.fecharModal();
+  }
+
+  private recarregarGridLancamentos() {
+    this.$emit("recarregarGridLancamentos");
+  }
+
+  private fecharModal() {
+    this.$emit("modalAberta", false);
+    this.resetarFormulario();
+  }
+
+  private resetarFormulario() {
     this.form = {
+      id: null,
       descricao: "",
-      categoria: "",
-      tipo: "",
-      valor: 0,
-      conta: "",
+      observacao: "",
+      dataVencimento: "",
+      dataPagamento: "",
+      valorBruto: null,
+      conta: {
+        id: null,
+      },
     };
   }
 }

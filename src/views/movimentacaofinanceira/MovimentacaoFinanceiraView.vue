@@ -18,15 +18,14 @@
     />
 
     <!-- Tabela -->
-    <table class="grid-movimentacao-financeira">
+    <table class="grid-movimentacao-financeira" :key="lancamentos.length">
       <thead class="bg-gray-100">
         <tr>
-          <th>Data</th>
           <th>Descrição</th>
-          <th>Categoria</th>
-          <th>Tipo</th>
           <th>Valor</th>
           <th>Conta</th>
+          <th>Data de Vencimento</th>
+          <th>Data de Pagamento</th>
         </tr>
       </thead>
       <tbody>
@@ -36,14 +35,16 @@
           :class="{ selecionado: lancamentoSelecionado === lancamento }"
           @click="selecionarLancamento(lancamento)"
         >
-          <td>{{ lancamento.data }}</td>
           <td>{{ lancamento.descricao }}</td>
-          <td>{{ lancamento.categoria }}</td>
+          <td>{{ formatCurrencyBRL(lancamento.valorBruto) }}</td>
+
+          <td v-if="lancamento.conta">{{ lancamento.conta.descricao }}</td>
           <td>
-            <span>{{ lancamento.tipo }}</span>
+            {{ lancamento.dataVencimento }}
           </td>
-          <td>R$ {{ lancamento.valor.toFixed(2) }}</td>
-          <td>{{ lancamento.conta }}</td>
+          <td>
+            {{ lancamento.dataPagamento }}
+          </td>
         </tr>
         <tr v-if="lancamentos.length === 0">
           <td colspan="6">Nenhum lançamento encontrado.</td>
@@ -53,9 +54,11 @@
   </div>
 
   <lancamento-modal
-    :modalAbertaLancamento="modalAbertaLancamento"
+    :modalAberta="modalAbertaLancamento"
     :acao="acaoBotao"
-    @modalAbertaLancamento="modalAbertaLancamento = $event"
+    :lancamentoSelecionado="lancamentoSelecionado"
+    @recarregarGridLancamentos="preencherLancamentos"
+    @modalAberta="modalAbertaLancamento = $event"
   >
   </lancamento-modal>
 </template>
@@ -65,17 +68,11 @@ import ButtonIcon from "@/components/button-icon/ButtonIcon.vue";
 import PrimaryButton from "@/components/button/PrimaryButton.vue";
 import { AcaoButtonIcon } from "@/enums/AcaoButtonIcon";
 import { ButtonColor } from "@/enums/ButtonColor";
+import { LancamentoDTO } from "@/interface/lancamento/LancamentoDTO";
+import LancamentoService from "@/services/lancamento/LancamentoService";
+import { formatCurrencyBRL } from "@/utils/moeda/MoedaUtil";
 import LancamentoModal from "@/views/movimentacaofinanceira/lancamento/LancamentoModal.vue";
 import { Component, Vue } from "vue-facing-decorator";
-
-interface Lancamento {
-  data: string;
-  descricao: string;
-  categoria: string;
-  tipo: "Receita" | "Despesa" | "";
-  valor: number;
-  conta: string;
-}
 
 @Component({
   components: {
@@ -90,37 +87,30 @@ export default class MovimentacaoFinanceiraView extends Vue {
 
   public acaoBotao: AcaoButtonIcon | null = null;
 
-  public lancamentos: Lancamento[] = [
-    {
-      data: "2025-07-30",
-      descricao: "Venda Produto X",
-      categoria: "Vendas",
-      tipo: "Receita",
-      valor: 1500.0,
-      conta: "Conta Corrente Itaú",
-    },
-    {
-      data: "2025-07-29",
-      descricao: "Pagamento de Fornecedor Y",
-      categoria: "Fornecedores",
-      tipo: "Despesa",
-      valor: 850.75,
-      conta: "Conta Corrente Bradesco",
-    },
-  ];
-
-  public lancamentoSelecionado: Lancamento | null = null;
-
+  public lancamentos: LancamentoDTO[] = [];
+  public lancamentoSelecionado: LancamentoDTO | null = null;
   public modalAbertaLancamento = false;
+  public formatCurrencyBRL = formatCurrencyBRL;
 
-  public novoLancamento: Lancamento = {
-    data: "",
-    descricao: "",
-    categoria: "",
-    tipo: "",
-    valor: 0,
-    conta: "",
-  };
+  mounted() {
+    this.incializar();
+  }
+
+  private incializar() {
+    this.preencherLancamentos();
+  }
+
+  public async preencherLancamentos() {
+    await LancamentoService.listar()
+      .then((response) => {
+        this.lancamentos = response.data;
+
+        console.log("this.lancamentos", this.lancamentos);
+      })
+      .catch((error) => {
+        console.error("Erro ao buscar lançamentos:", error);
+      });
+  }
 
   public abrirModal(acaoBotao: AcaoButtonIcon) {
     this.acaoBotao = acaoBotao;
@@ -131,12 +121,7 @@ export default class MovimentacaoFinanceiraView extends Vue {
     this.modalAbertaLancamento = false;
   }
 
-  public salvarLancamento(lancamento: Lancamento) {
-    this.lancamentos.push({ ...lancamento });
-    this.fecharModal();
-  }
-
-  public selecionarLancamento(lancamento: Lancamento) {
+  public selecionarLancamento(lancamento: LancamentoDTO) {
     this.lancamentoSelecionado = lancamento;
   }
 }
