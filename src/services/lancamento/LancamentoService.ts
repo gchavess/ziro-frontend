@@ -1,4 +1,5 @@
 import { LancamentoDTO } from "@/interface/lancamento/LancamentoDTO";
+import { LancamentoGraficoDTO } from "@/interface/lancamento/LancamentoGraficoDTO";
 import ServiceBase from "@/services/base/ServiceBase";
 import { AxiosResponse } from "axios";
 
@@ -27,6 +28,43 @@ class LancamentoService extends ServiceBase {
 
   async excluir(id: number): Promise<AxiosResponse<void>> {
     return this.$axios.delete<void>(`${this.path}/${id}`, {});
+  }
+  async montarGraficoSimplificado(
+    dataInicio: string,
+    dataFim: string,
+    contextoId: number | null,
+    naturezaId: number | null
+  ): Promise<AxiosResponse<LancamentoGraficoDTO>> {
+    return this.$axios.get<LancamentoGraficoDTO>(
+      `${this.path}/grafico/simplificado`,
+      {
+        params: {
+          dataInicio,
+          dataFim,
+          contextoId,
+          naturezaId,
+        },
+      }
+    );
+  }
+
+  async montarGraficoDetalhado(
+    dataInicio: string,
+    dataFim: string,
+    contextoId: number | null,
+    naturezaId: number | null
+  ): Promise<AxiosResponse<LancamentoGraficoDTO>> {
+    return this.$axios.get<LancamentoGraficoDTO>(
+      `${this.path}/grafico/detalhado`,
+      {
+        params: {
+          dataInicio,
+          dataFim,
+          contextoId,
+          naturezaId,
+        },
+      }
+    );
   }
 }
 

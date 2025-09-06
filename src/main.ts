@@ -9,6 +9,7 @@ import "@/assets/styles/tailwind.css";
 import "@/assets/styles/main.css";
 import "@/assets/styles/reset.css";
 import "@/assets/styles/theme.css";
+import "@/assets/styles/titulo/titulo.css";
 
 // Importação do estado de autenticação
 import { loadAuth } from "@/store/auth";
