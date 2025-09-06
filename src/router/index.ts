@@ -1,9 +1,9 @@
 import { createRouter, createWebHistory } from "vue-router";
 
+import BiView from "@/views/bi/BiView.vue";
 import FonteDadoView from "@/views/fontedado/FonteDadoView.vue";
 import CadastroView from "@/views/login/CadastroView.vue";
 import LoginView from "@/views/login/LoginView.vue";
-import ModelagemFinanceiraView from "@/views/modelagemfinanceira/ModelagemFinanceiraView.vue";
 import MovimentacaoFinanceiraView from "@/views/movimentacaofinanceira/MovimentacaoFinanceiraView.vue";
 
 const routes = [
@@ -18,9 +18,9 @@ const routes = [
     component: CadastroView,
   },
   {
-    path: "/modelagem-financeira",
-    name: "Modelagem Financeira",
-    component: ModelagemFinanceiraView,
+    path: "/bi",
+    name: "BI Financeiro",
+    component: BiView,
   },
   {
     path: "/movimentacao-financeira",

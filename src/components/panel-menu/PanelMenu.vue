@@ -38,7 +38,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-facing-decorator";
+import { Component, Prop, Vue, Watch } from "vue-facing-decorator";
 
 interface ChildItem {
   label: string;
@@ -63,6 +63,25 @@ export default class PanelMenu extends Vue {
 
   openIndex: number | null = null;
   selectedItem: SelectedItem = null;
+
+  @Watch("items", { immediate: true, deep: true })
+  onItemsChange() {
+    this.openIndex = null;
+    this.selectedItem = null;
+
+    if (this.items.length > 0) {
+      this.selectedItem = { type: "parent", parentIndex: 0 };
+
+      if (this.items[0].children.length > 0) {
+        this.openIndex = 0;
+      }
+
+      this.$emit("itemSelecionado", {
+        data: this.items[0],
+        info: this.selectedItem,
+      });
+    }
+  }
 
   toggle(index: number) {
     this.openIndex = this.openIndex === index ? null : index;
@@ -103,7 +122,6 @@ export default class PanelMenu extends Vue {
 
 <style scoped>
 .panel-menu {
-  padding: 0.5rem;
   max-width: 280px;
 }
 

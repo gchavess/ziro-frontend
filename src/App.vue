@@ -14,16 +14,13 @@
           </router-link>
         </li>
         <li>
-          <router-link to="/modelagem-financeira" active-class="active">
-            Modelagem Financeira
+          <router-link to="/bi" active-class="active">
+            BI Financeiro
           </router-link>
         </li>
       </ul>
     </nav>
-    <main
-      class="main-content"
-      :style="{ padding: mostrarBarraNavegacao ? '2rem' : '0' }"
-    >
+    <main :class="{ 'main-content': true, 'with-nav': mostrarBarraNavegacao }">
       <router-view />
     </main>
   </div>
@@ -113,8 +110,12 @@ export default class App extends Vue {
 
 .main-content {
   background-color: var(--color-hover-bg);
-  min-height: calc(100vh - 70px);
   font-family: "Inter", sans-serif;
-  height: calc(100vh - 70px);
+  height: calc(100vh - 74px);
+  padding: 0;
+}
+
+.main-content.with-nav {
+  padding: 2rem 2rem 0 2rem;
 }
 </style>

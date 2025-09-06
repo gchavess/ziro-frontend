@@ -72,6 +72,11 @@ export default class PrimaryButton extends Vue {
   background-color: #b91c1c;
 }
 
+.btn--alerta {
+  background-color: #f7c41e;
+  color: white;
+}
+
 .btn--disabled {
   opacity: 0.5;
   cursor: not-allowed;
