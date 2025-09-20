@@ -1,6 +1,6 @@
 <template>
   <div class="conteudo-modelagem-financeira-view">
-    <h1 class="titulo">BI Financeiro</h1>
+    <h1 class="titulo-2">BI Financeiro</h1>
 
     <div class="flex gap-4" style="height: 95%">
       <div class="container-tree">
@@ -123,7 +123,7 @@
           <switch-button
             class="ml-2"
             label="Visão detalhada"
-            v-model="visaoSimplificada"
+            v-model="visaoDetalhada"
             @change="preencherGrafico"
           />
 
@@ -131,6 +131,7 @@
             <primary-button
               texto="Análise Financeira com IA"
               :cor="buttonColor.ALERTA"
+              @click="gerarAnaliseFinanceira"
             />
           </div>
         </div>
@@ -139,6 +140,7 @@
           v-if="tipoVisualizacaoGrafico === acaoButtonIcon.GRAFICO_BARRA"
           :labels="dadosGrafico.months"
           :datasets="dadosGrafico.datasets"
+          :groupByMonth="true"
           title="Lançamentos por conta"
         />
 
@@ -180,6 +182,12 @@
     @modalAberta="modalAbertaConta = $event"
     @recarregarTreeContas="preencherTreeContas"
   ></conta-modal>
+
+  <analise-financeira-modal
+    :dadosAnalise="dadosAnaliseFinanceira"
+    :modalAberta="modalAbertaAnaliseFinanceira"
+    @modalAberta="modalAbertaAnaliseFinanceira = $event"
+  ></analise-financeira-modal>
 </template>
 
 <script lang="ts">
@@ -202,9 +210,11 @@ import { ContextoContaDTO } from "@/interface/contextoconta/ContextoContaDTO";
 import { NaturezaContaAgrupadaDTO } from "@/interface/naturezaconta/NaturezaContaAgrupadaDTO";
 import { NaturezaContaDTO } from "@/interface/naturezaconta/NaturezaContaDTO";
 import ContaService from "@/services/conta/ContaService";
+import LancamentoIAService from "@/services/lancamento/LancamentoIAService";
 import LancamentoService from "@/services/lancamento/LancamentoService";
 import NaturezaContaService from "@/services/naturezaconta/NaturezaContaService";
 import { formatarData } from "@/utils/data/DataUtils";
+import AnaliseFinanceiraModal from "@/views/bi/modal/AnaliseFinanceiraModal.vue";
 import ContaModal from "@/views/bi/modal/ContaModal.vue";
 import ContextoNaturezaModal from "@/views/bi/modal/ContextoNaturezaModal.vue";
 import { Component, Vue } from "vue-facing-decorator";
@@ -225,6 +235,7 @@ import { Component, Vue } from "vue-facing-decorator";
     ChartPie,
     InputText,
     SwitchButton,
+    AnaliseFinanceiraModal,
   },
 })
 export default class ModelagemFinanceiraView extends Vue {
@@ -248,12 +259,60 @@ export default class ModelagemFinanceiraView extends Vue {
 
   public treeModoAssociacao: boolean = true;
 
-  public visaoSimplificada: boolean = true;
+  public visaoDetalhada: boolean = false;
 
   public tipoVisualizacaoGrafico: AcaoButtonIcon = AcaoButtonIcon.GRAFICO_BARRA;
 
   public dadosGrafico: any = {};
   public keyGrafico: number = 0;
+
+  public modalAbertaAnaliseFinanceira = false;
+  public dadosAnaliseFinanceira = [];
+  // [
+  //   {
+  //     acoes: [
+  //       "Desenvolvimento de um plano de vendas anual com metas mensais.",
+  //       "Diversificação da base de clientes e fontes de receita.",
+  //       "Investimento em marketing e vendas para gerar leads e receita ao longo do ano.",
+  //       "Análise da sazonalidade e implementação de estratégias para mitigar o impacto dos meses de baixa receita.",
+  //     ],
+  //     causas: [
+  //       "Falta de estratégia de vendas consistente ao longo do ano.",
+  //       "Dependência excessiva de um único evento ou cliente em setembro.",
+  //       "Problemas com o processo de vendas ou marketing.",
+  //       "Sazonalidade extrema do negócio, sem planejamento para os meses de baixa.",
+  //     ],
+  //     fato: "Receita de vendas concentrada apenas em setembro de 2025 (R$ 6.000,00), com zero receita nos demais meses.",
+  //   },
+  //   {
+  //     acoes: [
+  //       "Implementação de um sistema de controle de custos mais rigoroso.",
+  //       "Análise detalhada dos custos variáveis para identificar e eliminar gastos desnecessários.",
+  //       "Melhoria dos processos de gestão de estoque e suprimentos.",
+  //       "Otimização dos processos de produção ou operação para reduzir custos.",
+  //     ],
+  //     causas: [
+  //       "Falta de controle de custos.",
+  //       "Gastos imprevistos ou não planejados.",
+  //       "Problemas com a gestão de estoque ou suprimentos.",
+  //       "Processos ineficientes de produção ou operação.",
+  //     ],
+  //     fato: "Custos variáveis presentes apenas em maio e julho de 2025 (R$ 600,00 e R$ 3.000,00, respectivamente), sem relação aparente com a receita.",
+  //   },
+  //   {
+  //     acoes: [
+  //       "Melhorar o planejamento da produção e vendas, alinhando-as à demanda projetada.",
+  //       "Revisão do processo de gestão de estoque para reduzir custos com itens obsoletos.",
+  //       "Implementar um sistema de previsão de demanda mais preciso.",
+  //     ],
+  //     causas: [
+  //       "Problemas de planejamento e sincronização entre produção e vendas.",
+  //       "Estoque excessivo ou obsoleto gerando custos sem receita correspondente.",
+  //       "Falta de previsão de demanda e consequente produção em excesso.",
+  //     ],
+  //     fato: "Descasamento entre receita e custos variáveis: custos significativos em meses sem receita.",
+  //   },
+  // ];
 
   public filtro: { dataInicio: string; dataFim: string } = {
     dataInicio: "2025-01-01",
@@ -267,6 +326,10 @@ export default class ModelagemFinanceiraView extends Vue {
   }
 
   mounted() {
+    // this.$nextTick(() => {
+    //   this.modalAbertaAnaliseFinanceira = true;
+    // });
+
     this.preencherTreeContas();
     this.preencherListaNaturezasContaAgrupada();
     this.preencherGrafico();
@@ -288,9 +351,9 @@ export default class ModelagemFinanceiraView extends Vue {
   }
 
   private async preencherGrafico() {
-    let service = this.visaoSimplificada
-      ? LancamentoService.montarGraficoSimplificado.bind(LancamentoService)
-      : LancamentoService.montarGraficoDetalhado.bind(LancamentoService);
+    let service = this.visaoDetalhada
+      ? LancamentoService.montarGraficoDetalhado.bind(LancamentoService)
+      : LancamentoService.montarGraficoSimplificado.bind(LancamentoService);
 
     await service(
       this.filtro.dataInicio,
@@ -398,6 +461,25 @@ export default class ModelagemFinanceiraView extends Vue {
 
     this.idsSelecionadosTreeAssociacao = somenteIdsFolhas;
   }
+
+  public async gerarAnaliseFinanceira() {
+    if (this.dadosAnaliseFinanceira.length > 0) {
+      this.modalAbertaAnaliseFinanceira = true;
+
+      return;
+    }
+
+    await LancamentoIAService.analiseFinanceira(this.dadosGrafico)
+      .then((response) => {
+        this.dadosAnaliseFinanceira = response;
+
+        console.log("response", response);
+        this.modalAbertaAnaliseFinanceira = true;
+      })
+      .catch((error) => {
+        console.error("Erro ao buscar dados para o gráfico:", error);
+      });
+  }
 }
 </script>
 
@@ -408,6 +490,7 @@ export default class ModelagemFinanceiraView extends Vue {
 
   .container-tree {
     width: 300px;
+    height: calc(100vh - 200px);
   }
 
   .container-panel-menu-natureza-contexto {
@@ -416,9 +499,8 @@ export default class ModelagemFinanceiraView extends Vue {
   }
 
   .botoes-associar-natureza {
-    position: absolute;
-    right: 0;
-    bottom: 0;
+    display: flex;
+    justify-content: flex-end;
     margin: 16px;
   }
 }

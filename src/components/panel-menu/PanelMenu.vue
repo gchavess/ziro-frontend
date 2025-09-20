@@ -122,7 +122,9 @@ export default class PanelMenu extends Vue {
 
 <style scoped>
 .panel-menu {
-  max-width: 280px;
+  min-width: 300px;
+  height: calc(100vh - 250px);
+  overflow: auto;
 }
 
 ul {

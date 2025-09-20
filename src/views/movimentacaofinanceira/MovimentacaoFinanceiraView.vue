@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 class="titulo">Movimentação Financeira</h1>
+    <h1 class="titulo-2">Movimentação Financeira</h1>
 
     <button-icon
       @click="abrirModal(acaoButtonIcon.INCLUIR)"

@@ -45,6 +45,9 @@ export default class ChartBar extends Vue {
   })
   public datasets!: { data: number[]; backgroundColor?: string }[];
 
+  @Prop({ type: Boolean, default: false })
+  public groupByMonth!: boolean;
+
   public get chartData() {
     return {
       labels: this.labels,
@@ -56,7 +59,11 @@ export default class ChartBar extends Vue {
     responsive: true,
     maintainAspectRatio: false,
     scales: {
+      x: {
+        stacked: true,
+      },
       y: {
+        stacked: true,
         ticks: {
           callback: (value: string) => formatCurrencyBRL(Number(value)),
         },

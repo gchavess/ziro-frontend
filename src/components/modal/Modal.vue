@@ -1,12 +1,13 @@
 <!-- Modal.vue -->
 <template>
   <div v-if="modalAberta" class="modal-overlay">
-    <div class="modal-content">
-      <slot name="header">
-        <h2 class="text-xl font-semibold mb-4">Modal</h2>
-      </slot>
+    <div class="modal-content" :class="classeTamanho">
+      <span class="titulo-4">{{ titulo }}</span>
+      <slot name="header" />
 
-      <slot name="body" />
+      <div class="container-body-modal">
+        <slot name="body" />
+      </div>
 
       <div class="modal-actions">
         <primary-button
@@ -40,10 +41,27 @@ export default class Modal extends Vue {
   @Prop({ type: Boolean, default: false })
   public modalAberta = false;
 
+  @Prop({ type: String, default: "" })
+  public titulo = "";
+
   @Prop({ type: Boolean, default: false })
   public botaoSalvarDesabilitado = false;
 
+  @Prop({ type: String, default: "medio" }) // pequeno | medio | grande
+  public tamanho!: string;
+
   public buttonColor = ButtonColor;
+
+  get classeTamanho() {
+    switch (this.tamanho) {
+      case "pequeno":
+        return "modal-pequeno";
+      case "grande":
+        return "modal-grande";
+      default:
+        return "modal-medio";
+    }
+  }
 
   public cancelar() {
     this.$emit("cancelar");
@@ -71,42 +89,24 @@ export default class Modal extends Vue {
   border-radius: 0.5rem;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
   width: 100%;
-  max-width: 420px;
   padding: 1.5rem;
   position: relative;
   animation: fadeIn 0.2s ease-out;
 }
 
-.modal-content h2 {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-  color: #111827;
+/* tamanhos */
+.modal-pequeno {
+  max-width: 320px;
+}
+.modal-medio {
+  max-width: 600px;
+}
+.modal-grande {
+  max-width: 900px;
 }
 
-.modal-content label {
-  display: block;
-  font-size: 0.875rem;
-  font-weight: 500;
-  margin-bottom: 0.25rem;
-  color: #374151;
-}
-
-.modal-content input,
-.modal-content select {
-  width: 100%;
-  padding: 0.5rem 0.75rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.375rem;
-  font-size: 0.875rem;
-  margin-bottom: 0.75rem;
-  transition: border-color 0.2s;
-}
-
-.modal-content input:focus,
-.modal-content select:focus {
-  border-color: #2563eb;
-  outline: none;
+.modal-content .container-body-modal {
+  padding-top: 1rem;
 }
 
 .modal-actions {

@@ -2,14 +2,11 @@
   <modal
     :modalAberta="modalAberta"
     :botaoSalvarDesabilitado="botaoSalvarDesabilitado"
+    :titulo="tituloModal"
     @modalAberta="$emit('modalAberta', $event)"
     @cancelar="cancelar"
     @salvar="salvar"
   >
-    <template #header>
-      <h2>{{ tituloModal }}</h2>
-    </template>
-
     <template #body>
       <form class="space-y-4" v-if="acao !== acaoButtonIcon.EXCLUIR">
         <div class="formulario-lancamento">
@@ -241,6 +238,5 @@ export default class LancamentoModal extends Vue {
   display: grid;
   grid-template-columns: 1fr;
   gap: 1rem;
-  padding-top: 1rem;
 }
 </style>
