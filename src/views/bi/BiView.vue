@@ -131,6 +131,7 @@
             <primary-button
               texto="Análise Financeira com IA"
               :cor="buttonColor.ALERTA"
+              :carregando="carregandoAnaliseFinanceira"
               @click="gerarAnaliseFinanceira"
             />
           </div>
@@ -207,6 +208,7 @@ import { AcaoButtonIcon } from "@/enums/AcaoButtonIcon";
 import { ButtonColor } from "@/enums/ButtonColor";
 import { ContaTreeNodeDTO } from "@/interface/conta/ContaTreeNodeDTO";
 import { ContextoContaDTO } from "@/interface/contextoconta/ContextoContaDTO";
+import { FatoCausaAcaoDTO } from "@/interface/fatocausaacao/FatoCausaAcaoDTO";
 import { NaturezaContaAgrupadaDTO } from "@/interface/naturezaconta/NaturezaContaAgrupadaDTO";
 import { NaturezaContaDTO } from "@/interface/naturezaconta/NaturezaContaDTO";
 import ContaService from "@/services/conta/ContaService";
@@ -266,8 +268,9 @@ export default class ModelagemFinanceiraView extends Vue {
   public dadosGrafico: any = {};
   public keyGrafico: number = 0;
 
+  public carregandoAnaliseFinanceira: boolean = false;
   public modalAbertaAnaliseFinanceira = false;
-  public dadosAnaliseFinanceira = [];
+  public dadosAnaliseFinanceira: FatoCausaAcaoDTO[] = [];
   // [
   //   {
   //     acoes: [
@@ -469,15 +472,19 @@ export default class ModelagemFinanceiraView extends Vue {
       return;
     }
 
+    this.carregandoAnaliseFinanceira = true;
+
     await LancamentoIAService.analiseFinanceira(this.dadosGrafico)
       .then((response) => {
         this.dadosAnaliseFinanceira = response;
 
-        console.log("response", response);
         this.modalAbertaAnaliseFinanceira = true;
       })
       .catch((error) => {
         console.error("Erro ao buscar dados para o gráfico:", error);
+      })
+      .finally(() => {
+        this.carregandoAnaliseFinanceira = false;
       });
   }
 }

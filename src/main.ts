@@ -6,8 +6,10 @@ import { createApp } from "vue";
 import "@/assets/styles/tailwind.css";
 
 // Importação global dos estilos
+import "@/assets/styles/botao-link/botao-link.css";
 import "@/assets/styles/main.css";
 import "@/assets/styles/reset.css";
+import "@/assets/styles/subtitulo/subtitulo.css";
 import "@/assets/styles/theme.css";
 import "@/assets/styles/titulo/titulo.css";
 
