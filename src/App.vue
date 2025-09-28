@@ -21,19 +21,22 @@
       </ul>
     </nav>
     <main :class="{ 'main-content': true, 'with-nav': mostrarBarraNavegacao }">
+      <Toaster />
+
       <router-view />
     </main>
   </div>
 </template>
 
 <script lang="ts">
+import Toaster from "@/components/toaster/Toaster.vue";
 import AuthService from "@/services/auth/AuthService";
 import { clearAuth } from "@/store/auth";
 import { Component, Vue } from "vue-facing-decorator";
 import { useRoute } from "vue-router";
 
 @Component({
-  components: {},
+  components: { Toaster },
   directives: {},
   emits: [],
 })

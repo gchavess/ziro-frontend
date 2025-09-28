@@ -1,15 +1,19 @@
 <template>
   <button
     :type="tipo"
-    :class="['btn', `btn--${cor}`, { 'btn--disabled': desabilitado }]"
-    :disabled="desabilitado"
+    :class="[
+      'btn',
+      `btn--${cor}`,
+      { 'btn--disabled': desabilitado || carregando },
+    ]"
+    :disabled="desabilitado || carregando"
   >
-    <slot>
-      <span class="btn__content">
-        <slot name="icon" />
-        <span>{{ texto }}</span>
-      </span>
-    </slot>
+    <span class="btn__content">
+      <span v-if="carregando" class="spinner"></span>
+
+      <slot name="icon" />
+      <span>{{ texto }}</span>
+    </span>
   </button>
 </template>
 
@@ -31,6 +35,9 @@ export default class PrimaryButton extends Vue {
 
   @Prop({ type: Boolean, default: false })
   public desabilitado!: boolean;
+
+  @Prop({ type: Boolean, default: false })
+  public carregando!: boolean;
 }
 </script>
 
@@ -43,6 +50,7 @@ export default class PrimaryButton extends Vue {
   cursor: pointer;
   border: none;
   transition: background-color 0.2s ease;
+  height: 40px;
 }
 
 .btn--primario {
@@ -86,5 +94,20 @@ export default class PrimaryButton extends Vue {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+}
+
+.spinner {
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-left-color: white;
+  border-radius: 50%;
+  width: 14px;
+  height: 14px;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 </style>

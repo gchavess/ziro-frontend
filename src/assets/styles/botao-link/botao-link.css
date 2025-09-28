@@ -1,0 +1,7 @@
+.botao-link {
+  color: var(--color-primary);
+  cursor: pointer;
+}
+.botao-link:hover {
+  text-decoration: underline;
+}

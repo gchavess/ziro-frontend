@@ -11,9 +11,11 @@
 
       <div class="modal-actions">
         <primary-button
+          v-if="exibirBoaoSalvar"
           texto="Salvar"
           :cor="buttonColor.PRIMARIO"
           :desabilitado="botaoSalvarDesabilitado"
+          :carregando="botaoCarregando"
           @click="salvar"
         />
         <primary-button
@@ -49,6 +51,12 @@ export default class Modal extends Vue {
 
   @Prop({ type: String, default: "medio" }) // pequeno | medio | grande
   public tamanho!: string;
+
+  @Prop({ type: Boolean, default: false })
+  public botaoCarregando!: boolean;
+
+  @Prop({ type: Boolean, default: true })
+  public exibirBoaoSalvar!: boolean;
 
   public buttonColor = ButtonColor;
 
