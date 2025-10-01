@@ -132,7 +132,7 @@
               texto="Análise Financeira com IA"
               :cor="buttonColor.ALERTA"
               :carregando="carregandoAnaliseFinanceira"
-              @click="gerarAnaliseFinanceira"
+              @click="abrirModalAnaliseFinanceira"
             />
           </div>
         </div>
@@ -185,7 +185,7 @@
   ></conta-modal>
 
   <analise-financeira-modal
-    :dadosAnalise="dadosAnaliseFinanceira"
+    :dadosGrafico="dadosGrafico"
     :modalAberta="modalAbertaAnaliseFinanceira"
     @modalAberta="modalAbertaAnaliseFinanceira = $event"
   ></analise-financeira-modal>
@@ -208,11 +208,10 @@ import { AcaoButtonIcon } from "@/enums/AcaoButtonIcon";
 import { ButtonColor } from "@/enums/ButtonColor";
 import { ContaTreeNodeDTO } from "@/interface/conta/ContaTreeNodeDTO";
 import { ContextoContaDTO } from "@/interface/contextoconta/ContextoContaDTO";
-import { FatoCausaAcaoDTO } from "@/interface/fatocausaacao/FatoCausaAcaoDTO";
+import { LancamentoGraficoDTO } from "@/interface/lancamento/LancamentoGraficoDTO";
 import { NaturezaContaAgrupadaDTO } from "@/interface/naturezaconta/NaturezaContaAgrupadaDTO";
 import { NaturezaContaDTO } from "@/interface/naturezaconta/NaturezaContaDTO";
 import ContaService from "@/services/conta/ContaService";
-import LancamentoIAService from "@/services/lancamento/LancamentoIAService";
 import LancamentoService from "@/services/lancamento/LancamentoService";
 import NaturezaContaService from "@/services/naturezaconta/NaturezaContaService";
 import { formatarData } from "@/utils/data/DataUtils";
@@ -265,12 +264,14 @@ export default class ModelagemFinanceiraView extends Vue {
 
   public tipoVisualizacaoGrafico: AcaoButtonIcon = AcaoButtonIcon.GRAFICO_BARRA;
 
-  public dadosGrafico: any = {};
+  public dadosGrafico: LancamentoGraficoDTO = {
+    months: [],
+    datasets: [{ label: "", data: [], backgroundColor: "" }],
+  };
   public keyGrafico: number = 0;
 
   public carregandoAnaliseFinanceira: boolean = false;
   public modalAbertaAnaliseFinanceira = false;
-  public dadosAnaliseFinanceira: FatoCausaAcaoDTO[] = [];
   // [
   //   {
   //     acoes: [
@@ -329,28 +330,9 @@ export default class ModelagemFinanceiraView extends Vue {
   }
 
   mounted() {
-    // this.$nextTick(() => {
-    //   this.modalAbertaAnaliseFinanceira = true;
-    // });
-
     this.preencherTreeContas();
     this.preencherListaNaturezasContaAgrupada();
     this.preencherGrafico();
-  }
-
-  dadosPie() {
-    if (!this.dadosGrafico.datasets || !this.dadosGrafico.months)
-      return { labels: [], values: [], colors: [] };
-
-    // Aqui assumimos que queremos somar os datasets ou escolher só um
-    const dataset = this.dadosGrafico?.datasets[0]; // por exemplo
-    const retorno = {
-      labels: this.dadosGrafico?.months,
-      values: dataset?.data,
-      colors: dataset?.color ? dataset?.data.map(() => dataset?.color) : [],
-    };
-
-    return retorno;
   }
 
   private async preencherGrafico() {
@@ -465,27 +447,8 @@ export default class ModelagemFinanceiraView extends Vue {
     this.idsSelecionadosTreeAssociacao = somenteIdsFolhas;
   }
 
-  public async gerarAnaliseFinanceira() {
-    if (this.dadosAnaliseFinanceira.length > 0) {
-      this.modalAbertaAnaliseFinanceira = true;
-
-      return;
-    }
-
-    this.carregandoAnaliseFinanceira = true;
-
-    await LancamentoIAService.analiseFinanceira(this.dadosGrafico)
-      .then((response) => {
-        this.dadosAnaliseFinanceira = response;
-
-        this.modalAbertaAnaliseFinanceira = true;
-      })
-      .catch((error) => {
-        console.error("Erro ao buscar dados para o gráfico:", error);
-      })
-      .finally(() => {
-        this.carregandoAnaliseFinanceira = false;
-      });
+  public async abrirModalAnaliseFinanceira() {
+    this.modalAbertaAnaliseFinanceira = true;
   }
 }
 </script>

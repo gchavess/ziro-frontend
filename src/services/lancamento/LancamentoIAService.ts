@@ -1,4 +1,4 @@
-import { FatoCausaAcaoDTO } from "@/interface/fatocausaacao/FatoCausaAcaoDTO";
+import { AnaliseFinanceiraDTO } from "@/interface/analisefinanceira/AnaliseFinanceiraDTO";
 import { LancamentoGraficoDTO } from "@/interface/lancamento/LancamentoGraficoDTO";
 import axios, { AxiosInstance } from "axios";
 
@@ -12,8 +12,8 @@ class LancamentoIAService {
 
   async analiseFinanceira(
     dadosGrafico: LancamentoGraficoDTO
-  ): Promise<FatoCausaAcaoDTO[]> {
-    const response = await this.axios.post<FatoCausaAcaoDTO[]>(
+  ): Promise<AnaliseFinanceiraDTO[]> {
+    const response = await this.axios.post<AnaliseFinanceiraDTO[]>(
       `${this.path}/analise-financeira`,
       dadosGrafico
     );
