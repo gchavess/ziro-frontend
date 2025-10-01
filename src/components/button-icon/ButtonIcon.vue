@@ -15,17 +15,23 @@
         <path :d="iconPath" />
       </svg>
     </button>
-    <span v-if="label" class="tooltip">{{ label }}</span>
+
+    <!-- Tooltip com classe dinâmica baseada na posição -->
+    <span v-if="label" :class="['tooltip', `tooltip-${posicaoTooltip}`]">{{
+      label
+    }}</span>
   </div>
 </template>
 
 <script lang="ts">
 import { AcaoButtonIcon } from "@/enums/AcaoButtonIcon";
 import {
+  mdiCheck,
   mdiCircle,
   mdiCogOutline,
   mdiPencil,
   mdiPlus,
+  mdiThumbUpOutline,
   mdiTrashCan,
 } from "@mdi/js";
 import { Component, Prop, Vue } from "vue-facing-decorator";
@@ -34,6 +40,12 @@ import { Component, Prop, Vue } from "vue-facing-decorator";
 export default class ButtonIcon extends Vue {
   @Prop({ type: AcaoButtonIcon, default: "" }) acao!: AcaoButtonIcon;
   @Prop({ type: Boolean, default: false }) desabilitado!: boolean;
+  @Prop({ type: String, default: "" }) labelTooltip!: string;
+  @Prop({ type: String, default: "top" }) posicaoTooltip!:
+    | "top"
+    | "bottom"
+    | "left"
+    | "right";
 
   public get iconPath() {
     switch (this.acao) {
@@ -45,12 +57,18 @@ export default class ButtonIcon extends Vue {
         return mdiTrashCan;
       case AcaoButtonIcon.CONFIGURAR:
         return mdiCogOutline;
+      case AcaoButtonIcon.CURTIR:
+        return mdiThumbUpOutline;
+      case AcaoButtonIcon.CHECK:
+        return mdiCheck;
       default:
         return mdiCircle;
     }
   }
 
   public get label() {
+    if (this.labelTooltip) return this.labelTooltip;
+
     switch (this.acao) {
       case AcaoButtonIcon.INCLUIR:
         return "Incluir";
@@ -60,6 +78,10 @@ export default class ButtonIcon extends Vue {
         return "Excluir";
       case AcaoButtonIcon.CONFIGURAR:
         return "Configurar";
+      case AcaoButtonIcon.CURTIR:
+        return "Adicionar";
+      case AcaoButtonIcon.CHECK:
+        return "Salvar";
       default:
         return "";
     }
@@ -82,7 +104,6 @@ export default class ButtonIcon extends Vue {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-
   transition: background-color 0.2s ease, box-shadow 0.2s ease,
     transform 0.1s ease;
 }
@@ -108,12 +129,9 @@ export default class ButtonIcon extends Vue {
   color: var(--color-text);
 }
 
-/* Tooltip estilizado */
+/* Tooltip padrão */
 .tooltip {
   position: absolute;
-  bottom: 125%; /* Acima do botão */
-  left: 50%;
-  transform: translateX(-50%);
   background-color: #333;
   color: #fff;
   padding: 5px 8px;
@@ -123,12 +141,24 @@ export default class ButtonIcon extends Vue {
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.2s ease;
+  z-index: 10;
 }
 
-.tooltip::after {
+.button-icon-wrapper:hover .tooltip {
+  opacity: 1;
+}
+
+/* Tooltip directions */
+.tooltip-top {
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.tooltip-top::after {
   content: "";
   position: absolute;
-  top: 100%; /* Ponta da seta abaixo do tooltip */
+  top: 100%;
   left: 50%;
   transform: translateX(-50%);
   border-width: 5px;
@@ -136,7 +166,54 @@ export default class ButtonIcon extends Vue {
   border-color: #333 transparent transparent transparent;
 }
 
-.button-icon-wrapper:hover .tooltip {
-  opacity: 1;
+.tooltip-bottom {
+  top: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.tooltip-bottom::after {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent #333 transparent;
+}
+
+.tooltip-left {
+  right: 125%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.tooltip-left::after {
+  content: "";
+  position: absolute;
+  right: -5px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent transparent #333;
+}
+
+.tooltip-right {
+  left: 125%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.tooltip-right::after {
+  content: "";
+  position: absolute;
+  left: -5px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent #333 transparent transparent;
 }
 </style>

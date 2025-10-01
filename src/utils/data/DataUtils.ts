@@ -6,9 +6,14 @@ export function formatarData(data: string | number | null | undefined): string {
   if (typeof data === "number") {
     date = new Date(data);
   } else {
-    const [year, month, day] = data.split("-").map(Number);
-    date = new Date(year, month - 1, day);
+    date = new Date(data);
   }
 
-  return date.toLocaleDateString("pt-BR");
+  if (isNaN(date.getTime())) return "";
+
+  return date.toLocaleDateString("pt-BR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
 }
