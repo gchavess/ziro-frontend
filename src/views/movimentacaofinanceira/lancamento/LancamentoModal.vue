@@ -28,7 +28,7 @@
             <input-currency v-model="form.valorBruto" :label="'Valor'" />
           </div>
 
-          <div>
+          <div v-if="form.conta">
             <input-select
               :key="form.conta.id"
               v-model="form.conta.id"

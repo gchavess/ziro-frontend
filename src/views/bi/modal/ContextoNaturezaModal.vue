@@ -54,6 +54,7 @@ import NaturezaContaService from "@/services/naturezaconta/NaturezaContaService"
 import { Component, Prop, Vue, Watch } from "vue-facing-decorator";
 
 @Component({
+  emits: ["modalAberta", "recarregarPanelMenuContextoNatureza"],
   components: { Modal, InputCurrency, InputText, InputSelect },
 })
 export default class ContextoNaturezaModal extends Vue {

@@ -239,7 +239,7 @@ import { Component, Vue } from "vue-facing-decorator";
     AnaliseFinanceiraModal,
   },
 })
-export default class ModelagemFinanceiraView extends Vue {
+export default class BiView extends Vue {
   public acaoButtonIcon = AcaoButtonIcon;
   public buttonColor = ButtonColor;
 
