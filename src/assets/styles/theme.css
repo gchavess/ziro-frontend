@@ -1,0 +1,18 @@
+/* src/assets/theme.css */
+:root {
+  --color-primary: #4f46e5; /* azul índigo */
+  --color-primary-light: #6366f1;
+  --color-success: #16a34a;
+  --color-danger: #dc2626;
+  --color-bg: #ffffff;
+  --color-hover-bg: #f5f5f5;
+  --color-border: #eee;
+  --color-text: rgb(85, 85, 85);
+}
+
+/* para modo dark, pode criar .dark-theme e sobrescrever */
+.dark-theme {
+  --color-primary: #818cf8;
+  --color-bg: #1e293b;
+  --color-text: #f9fafb;
+}

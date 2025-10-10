@@ -1,0 +1,4 @@
+tipo,descricao,observacao,codigo,dataVencimento,dataPagamento,valorBruto,paiOuContaCodigo
+CONTA,Receitas,Receitas operacionais da empresa,COD100,,,0,
+CONTA,Serviços,Receita de serviços prestados,COD101,,,0,COD100
+LANCAMENTO,Receita Serviços - 01/2025,Receita de serviços prestados,COD101,2025-01-31,2025-01-30,1500000.00,COD100
