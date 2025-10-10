@@ -1,10 +1,11 @@
 services:
   frontend:
-    build: .
+    build:
+      context: .
+      args:
+        NODE_ENV: ${NODE_ENV:-development}
     container_name: ziro-frontend
     ports:
       - "5173:5173"
-    volumes:
-      - .:/app
-      - /app/node_modules
-    command: yarn dev --host 0.0.0.0
+    environment:
+      - NODE_ENV=${NODE_ENV:-development}
