@@ -2,21 +2,20 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Instala dependências
+# Copia package.json e yarn.lock
 COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
 
-# Copia código
+# Copia todo código e env files
 COPY . .
 
-# Build só se for produção
+# Define NODE_ENV
 ARG NODE_ENV=development
 ENV NODE_ENV=${NODE_ENV}
 
-RUN [ "$NODE_ENV" = "production" ] && yarn build || echo "Development mode, skipping build"
+# Build só se for produção
+RUN if [ "$NODE_ENV" = "production" ]; then yarn build; else echo "Development mode, skipping build"; fi
 
-# Expor porta 5173
 EXPOSE 5173
 
-# CMD decide se é dev ou prod
-CMD sh -c 'if [ "$NODE_ENV" = "production" ]; then yarn preview --port 5173 --host; else yarn dev --host 0.0.0.0; fi'
+CMD if [ "$NODE_ENV" = "production" ]; then yarn preview --port 5173 --host; else yarn dev --host 0.0.0.0; fi
