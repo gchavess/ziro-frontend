@@ -5,9 +5,9 @@ services:
     build:
       context: .
       args:
-        NODE_ENV: ${NODE_ENV:-development}
+        NODE_ENV: production # garante que o Dockerfile faça build em modo produção
     container_name: ziro-frontend
     ports:
       - "5173:5173"
     environment:
-      - NODE_ENV=${NODE_ENV:-development}
+      NODE_ENV: production
