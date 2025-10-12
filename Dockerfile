@@ -2,21 +2,21 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Copia package.json e yarn.lock
+# Copia dependências primeiro (para cache eficiente)
 COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
 
-# Copia todo o código e arquivos .env
+# Copia o restante do código
 COPY . .
 
-# Define NODE_ENV (padrão development)
+# Define e propaga o ambiente
 ARG NODE_ENV=development
 ENV NODE_ENV=${NODE_ENV}
 
-# Build do Vite com mode production, se NODE_ENV=production
+# Build do Vite apenas se for produção
 RUN if [ "$NODE_ENV" = "production" ]; then yarn build --mode production; else echo "Development mode, skipping build"; fi
 
 EXPOSE 5173
 
-# Comando para iniciar: preview em produção, dev em desenvolvimento
-CMD if [ "$NODE_ENV" = "production" ]; then yarn preview --port 5173 --host; else yarn dev --host 0.0.0.0; fi
+# O comando final é controlado via docker-compose (flexível)
+CMD ["sh", "-c", "echo 'Use docker-compose to start the right mode (dev or prod)'"]

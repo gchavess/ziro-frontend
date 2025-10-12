@@ -5,9 +5,20 @@ services:
     build:
       context: .
       args:
-        NODE_ENV: production # garante que o Dockerfile faça build em modo produção
+        NODE_ENV: ${NODE_ENV:-development} # usa production ou development dinamicamente
     container_name: ziro-frontend
     ports:
       - "5173:5173"
+    env_file:
+      - .env.${ENV:-local} # carrega .env.local ou .env.production automaticamente
     environment:
-      NODE_ENV: production
+      - NODE_ENV=${NODE_ENV:-development}
+    command: >
+      sh -c "if [ '$NODE_ENV' = 'production' ];
+              then yarn preview --port 5173 --host;
+              else yarn dev --host 0.0.0.0;
+              fi"
+    deploy:
+      resources:
+        limits:
+          memory: 256M
