@@ -1,24 +1,21 @@
-version: "3.8"
-
 services:
   frontend:
     build:
       context: .
       args:
-        NODE_ENV: ${NODE_ENV:-development} # usa production ou development dinamicamente
+        NODE_ENV: ${NODE_ENV:-development}
     container_name: ziro-frontend
     ports:
       - "5173:5173"
     env_file:
-      - .env.${ENV:-local} # carrega .env.local ou .env.production automaticamente
+      - .env.${ENV:-local}
     environment:
       - NODE_ENV=${NODE_ENV:-development}
+    volumes:
+      - .:/app
+      - /app/node_modules
     command: >
       sh -c "if [ '$NODE_ENV' = 'production' ];
               then yarn preview --port 5173 --host;
               else yarn dev --host 0.0.0.0;
               fi"
-    deploy:
-      resources:
-        limits:
-          memory: 256M

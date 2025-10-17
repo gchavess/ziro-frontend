@@ -1,4 +1,5 @@
 import { AnaliseFinanceiraDTO } from "@/interface/analisefinanceira/AnaliseFinanceiraDTO";
+import { LancamentoGraficoDTO } from "@/interface/lancamento/LancamentoGraficoDTO";
 import ServiceBase from "@/services/base/ServiceBase";
 import { AxiosResponse } from "axios";
 
@@ -31,6 +32,15 @@ class AnaliseFinanceiraService extends ServiceBase {
 
   async excluir(id: number): Promise<AxiosResponse<void>> {
     return this.$axios.delete<void>(`${this.path}/${id}`, {});
+  }
+
+  async gerarInsights(
+    dadosGrafico: LancamentoGraficoDTO
+  ): Promise<AxiosResponse<AnaliseFinanceiraDTO>> {
+    return this.$axios.post<AnaliseFinanceiraDTO>(
+      `${this.path}/insights`,
+      dadosGrafico
+    );
   }
 }
 
