@@ -242,7 +242,6 @@ import { ButtonColor } from "@/enums/ButtonColor";
 import { AnaliseFinanceiraDTO } from "@/interface/analisefinanceira/AnaliseFinanceiraDTO";
 import { LancamentoGraficoDTO } from "@/interface/lancamento/LancamentoGraficoDTO";
 import AnaliseFinanceiraService from "@/services/analisefinanceira/AnaliseFinanceiraService";
-import LancamentoIAService from "@/services/lancamento/LancamentoIAService";
 import { formatarData } from "@/utils/data/DataUtils";
 import { Component, Prop, Vue, Watch } from "vue-facing-decorator";
 
@@ -463,9 +462,9 @@ export default class AnaliseFinanceiraModal extends Vue {
   public async gerarAnaliseFinanceira() {
     this.botaoGerarAnaliseFinanceiraCarregando = true;
 
-    await LancamentoIAService.analiseFinanceira(this.dadosGrafico)
+    await AnaliseFinanceiraService.gerarInsights(this.dadosGrafico)
       .then((response) => {
-        this.dadosAnalise.unshift(...response);
+        this.dadosAnalise.unshift(...response.data);
       })
       .catch(() => {
         window.$toast.error("Erro ao fazer análise financeira.");
