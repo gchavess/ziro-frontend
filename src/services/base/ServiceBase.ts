@@ -13,7 +13,7 @@ export default class ServiceBase {
   constructor() {
     this.$axios = axios.create({
       baseURL: this.API_URL,
-      withCredentials: true,
+      withCredentials: false,
     });
 
     this.setupInterceptors();
