@@ -27,7 +27,7 @@
     </div>
 
     <ul v-show="node.expanded" v-if="hasChildren" class="pl-4">
-      <tree-node
+      <tree-node-mult-select
         v-for="child in node.children"
         :key="child.id"
         :node="child"
@@ -48,6 +48,7 @@ import { Component, Prop, Vue } from "vue-facing-decorator";
   components: {
     TreeNode,
     Chip,
+    TreeNodeMultSelect,
   },
 })
 export default class TreeNodeMultSelect extends Vue {
