@@ -41,12 +41,10 @@
 
 <script lang="ts">
 import Chip from "@/components/chip/Chip.vue";
-import TreeNode from "@/components/tree/TreeNode.vue";
 import { Component, Prop, Vue } from "vue-facing-decorator";
 
 @Component({
   components: {
-    TreeNode,
     Chip,
     TreeNodeMultSelect,
   },
