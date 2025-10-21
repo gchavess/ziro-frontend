@@ -41,14 +41,16 @@
 
 <script lang="ts">
 import Chip from "@/components/chip/Chip.vue";
+import TreeNode from "@/components/tree/TreeNode.vue";
 import { Component, Prop, Vue } from "vue-facing-decorator";
 
 @Component({
   components: {
+    TreeNode,
     Chip,
   },
 })
-export default class TreeNode extends Vue {
+export default class TreeNodeMultSelect extends Vue {
   @Prop({ required: true }) node!: any;
   @Prop({ required: true }) selectedNodes!: any[];
 
