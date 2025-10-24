@@ -101,8 +101,6 @@ export default class MovimentacaoFinanceiraView extends Vue {
     await LancamentoService.listar()
       .then((response) => {
         this.lancamentos = response.data;
-
-        console.log("this.lancamentos", this.lancamentos);
       })
       .catch((error) => {
         console.error("Erro ao buscar lançamentos:", error);
