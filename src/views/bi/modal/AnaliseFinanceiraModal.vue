@@ -9,7 +9,7 @@
   >
     <template #body>
       <div class="container-dados-analise-financeira-modal">
-        <div style="justify-content: flex-end; display: flex">
+        <div class="container-botao-analise-financeira">
           <primary-button
             texto="Gerar nova Análise Financeira com IA"
             :cor="buttonColor.ALERTA"
@@ -79,13 +79,25 @@
             <template #header>
               <div class="header-painel-causa-acao">
                 Causas
-                <button-icon
-                  v-if="fato.id"
-                  :acao="acaoButtonIcon.INCLUIR"
-                  :labelTooltip="'Adicionar nova causa'"
-                  :posicaoTooltip="'left'"
-                  @click.prevent.stop="adicionarNovaCausa(fato)"
-                />
+
+                <div>
+                  <button-icon
+                    v-if="fato.id"
+                    :acao="acaoButtonIcon.INCLUIR"
+                    :labelTooltip="'Adicionar nova causa'"
+                    :posicaoTooltip="'left'"
+                    @click.prevent.stop="adicionarNovaCausa(fato)"
+                  />
+
+                  <button-icon
+                    :acao="
+                      !expandirCausas[index]
+                        ? acaoButtonIcon.EXPANDIR
+                        : acaoButtonIcon.RECOLHER
+                    "
+                    :posicaoTooltip="'left'"
+                  />
+                </div>
               </div>
             </template>
 
@@ -144,13 +156,24 @@
             <template #header>
               <div class="header-painel-causa-acao">
                 Ações
-                <button-icon
-                  v-if="fato.id"
-                  :acao="acaoButtonIcon.INCLUIR"
-                  :labelTooltip="'Adicionar nova ação'"
-                  :posicaoTooltip="'left'"
-                  @click.prevent.stop="adicionarNovaAcao(fato)"
-                />
+                <div>
+                  <button-icon
+                    v-if="fato.id"
+                    :acao="acaoButtonIcon.INCLUIR"
+                    :labelTooltip="'Adicionar nova ação'"
+                    :posicaoTooltip="'left'"
+                    @click.prevent.stop="adicionarNovaAcao(fato)"
+                  />
+
+                  <button-icon
+                    :acao="
+                      !expandirAcoes[index]
+                        ? acaoButtonIcon.EXPANDIR
+                        : acaoButtonIcon.RECOLHER
+                    "
+                    :posicaoTooltip="'left'"
+                  />
+                </div>
               </div>
             </template>
 
@@ -344,7 +367,7 @@ export default class AnaliseFinanceiraModal extends Vue {
         );
       })
       .catch(() => {
-        window.$toast.error("Erro ao preencher as análises financeiras.");
+        window.$toast.error("Erro ao preencher as análises financeiras");
       });
   }
 
@@ -375,7 +398,7 @@ export default class AnaliseFinanceiraModal extends Vue {
 
       window.$toast.success("Fato, causas e ações criados com sucesso!");
     } catch (error) {
-      window.$toast.error("Erro ao criar fato, causas e ações.");
+      window.$toast.error("Erro ao criar fato, causas e ações");
     }
   }
 
@@ -392,7 +415,7 @@ export default class AnaliseFinanceiraModal extends Vue {
         fato.editando = false;
       })
       .catch(() => {
-        window.$toast.error("Erro ao criar fato, causas e ações.");
+        window.$toast.error("Erro ao criar fato, causas e ações");
       });
   }
 
@@ -451,7 +474,7 @@ export default class AnaliseFinanceiraModal extends Vue {
         window.$toast.success("Fato excluído com sucesso!");
       })
       .catch(() => {
-        window.$toast.error("Erro ao excluir fato.");
+        window.$toast.error("Erro ao excluir fato");
       })
       .finally(() => {
         this.modalConfirmacaoAberta = false;
@@ -467,7 +490,7 @@ export default class AnaliseFinanceiraModal extends Vue {
         this.dadosAnalise.unshift(...response.data);
       })
       .catch(() => {
-        window.$toast.error("Erro ao fazer análise financeira.");
+        window.$toast.error("Erro ao fazer análise financeira");
       })
       .finally(() => {
         this.botaoGerarAnaliseFinanceiraCarregando = false;
@@ -668,5 +691,10 @@ export default class AnaliseFinanceiraModal extends Vue {
   min-width: 80px;
   max-width: 80px;
   justify-content: flex-end;
+}
+
+.container-botao-analise-financeira {
+  justify-content: flex-end;
+  display: flex;
 }
 </style>

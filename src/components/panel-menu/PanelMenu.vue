@@ -65,21 +65,54 @@ export default class PanelMenu extends Vue {
   selectedItem: SelectedItem = null;
 
   @Watch("items", { immediate: true, deep: true })
-  onItemsChange() {
-    this.openIndex = null;
-    this.selectedItem = null;
+  onItemsChange(newItems: ParentItem[], oldItems: ParentItem[]) {
+    if (!oldItems || oldItems.length === 0) {
+      // primeira carga: mantém o comportamento atual
+      if (newItems.length > 0) {
+        this.selectedItem = { type: "parent", parentIndex: 0 };
 
-    if (this.items.length > 0) {
-      this.selectedItem = { type: "parent", parentIndex: 0 };
+        if (newItems[0].children.length > 0) {
+          this.openIndex = 0;
+        }
 
-      if (this.items[0].children.length > 0) {
-        this.openIndex = 0;
+        this.$emit("itemSelecionado", {
+          data: newItems[0],
+          info: this.selectedItem,
+        });
       }
+      return;
+    }
 
-      this.$emit("itemSelecionado", {
-        data: this.items[0],
-        info: this.selectedItem,
-      });
+    // tenta restaurar o estado anterior
+    const prevSelected = this.selectedItem;
+    const prevOpen = this.openIndex;
+
+    // verifica se o item anteriormente selecionado ainda existe
+    if (prevSelected) {
+      const parent = newItems[prevSelected.parentIndex];
+      if (parent) {
+        if (prevSelected.type === "child" && parent.children?.length) {
+          const child = parent.children[prevSelected.childIndex ?? -1];
+          if (child) {
+            this.selectedItem = prevSelected;
+            this.$emit("itemSelecionado", {
+              data: child,
+              info: this.selectedItem,
+            });
+          }
+        } else {
+          this.selectedItem = prevSelected;
+          this.$emit("itemSelecionado", {
+            data: parent,
+            info: this.selectedItem,
+          });
+        }
+      }
+    }
+
+    // restaura o nível aberto, se ainda existir
+    if (prevOpen !== null && newItems[prevOpen]) {
+      this.openIndex = prevOpen;
     }
   }
 
@@ -187,7 +220,7 @@ ul {
 }
 
 .selected {
-  background-color: #d0e7ff;
+  background-color: var(--color-primary-bg);
   color: var(--color-primary);
 }
 

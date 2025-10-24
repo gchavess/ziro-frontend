@@ -2,6 +2,7 @@
 :root {
   --color-primary: #4f46e5; /* azul índigo */
   --color-primary-light: #6366f1;
+  --color-primary-bg: #e0e7ff;
   --color-success: #16a34a;
   --color-danger: #dc2626;
   --color-bg: #ffffff;

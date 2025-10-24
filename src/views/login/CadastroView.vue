@@ -57,7 +57,7 @@
 </template>
 
 <script lang="ts">
-import UsuarioService from "@/services/usuario/UsuarioService";
+import AuthService from "@/services/auth/AuthService";
 import { Component, Vue } from "vue-facing-decorator";
 
 @Component({
@@ -78,16 +78,19 @@ export default class CadastroView extends Vue {
     }
 
     try {
-      const usuario = await UsuarioService.criar({
+      await AuthService.criar({
         nome: this.name,
         email: this.email,
         senha: this.password,
       });
-      alert(`Usuário ${usuario.nome} cadastrado com sucesso!`);
+
+      window.$toast.success("Conta criada com sucesso!");
+
       this.goToLogin();
     } catch (error) {
       console.error("Erro ao cadastrar usuário:", error);
-      alert("Ocorreu um erro ao cadastrar. Tente novamente.");
+
+      window.$toast.error("Ocorreu um erro ao cadastrar. Tente novamente");
     }
   }
 
@@ -106,7 +109,7 @@ export default class CadastroView extends Vue {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(135deg, #3a9bdc, #3adbc9);
+  background: linear-gradient(135deg, #b4b4b4, #f0f0f0);
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   padding: 1rem;
 }
@@ -124,7 +127,7 @@ export default class CadastroView extends Vue {
 .register-title {
   font-size: 3rem;
   margin-bottom: 0.2rem;
-  color: #3a9bdc;
+  color: var(--color-primary);
   font-weight: 700;
 }
 
@@ -157,12 +160,12 @@ export default class CadastroView extends Vue {
 
 .register-form input:focus {
   outline: none;
-  border-color: #3a9bdc;
-  box-shadow: 0 0 6px #3a9bdc;
+  border-color: var(--color-primary) c;
+  box-shadow: 0 0 6px var(--color-primary);
 }
 
 .btn-register {
-  background-color: #3a9bdc;
+  background-color: var(--color-primary);
   color: white;
   font-weight: 700;
   padding: 0.9rem;
@@ -174,7 +177,7 @@ export default class CadastroView extends Vue {
 }
 
 .btn-register:hover {
-  background-color: #3180c2;
+  background-color: var(--color-primary-light);
 }
 
 .register-footer {
@@ -184,7 +187,7 @@ export default class CadastroView extends Vue {
 }
 
 .register-footer a {
-  color: #3a9bdc;
+  color: var(--color-primary);
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;

@@ -11,7 +11,14 @@
         v-if="hasChildren"
         @click.stop="handleToggle"
       >
-        ▶
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="icon"
+          viewBox="0 0 24 24"
+          :class="{ rotated: node.expanded }"
+        >
+          <path :d="mdiChevronRight" />
+        </svg>
       </span>
 
       <span v-else class="toggle-icon"></span>
@@ -41,6 +48,7 @@
 
 <script lang="ts">
 import Chip from "@/components/chip/Chip.vue";
+import { mdiChevronRight } from "@mdi/js";
 import { Component, Prop, Vue } from "vue-facing-decorator";
 
 @Component({
@@ -52,6 +60,8 @@ import { Component, Prop, Vue } from "vue-facing-decorator";
 export default class TreeNodeMultSelect extends Vue {
   @Prop({ required: true }) node!: any;
   @Prop({ required: true }) selectedNodes!: any[];
+
+  public mdiChevronRight = mdiChevronRight;
 
   get hasChildren() {
     return this.node.children && this.node.children.length > 0;
@@ -74,11 +84,19 @@ export default class TreeNodeMultSelect extends Vue {
 <style>
 .tree-checkbox {
   margin-right: 0.5rem;
-  width: 1rem;
-  height: 1rem;
+  min-width: 16px;
+  min-height: 16px;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.tree-checkbox:checked {
+  accent-color: var(--color-primary);
 }
 
 .tree-label {
-  flex: 1;
+  margin-right: 6px;
+  white-space: nowrap;
 }
 </style>

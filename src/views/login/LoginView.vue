@@ -57,11 +57,16 @@ export default class LoginView extends Vue {
     })
       .then((response) => {
         const dados = response.data;
-        setAuth(dados.token, dados.usuarioId.toString());
+        setAuth(
+          dados.token,
+          dados.usuarioId.toString(),
+          dados.nome,
+          dados.iniciaisNome
+        );
         this.$router.push({ name: "Movimentação Financeira" });
       })
-      .catch((error) => {
-        alert("Email ou senha inválidos.");
+      .catch(() => {
+        window.$toast.error("Email ou senha inválidos");
       });
   }
 
@@ -78,7 +83,8 @@ export default class LoginView extends Vue {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(135deg, #3a9bdc, #3adbc9);
+  background: linear-gradient(135deg, #b4b4b4, #f0f0f0);
+
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   padding: 1rem;
 }
@@ -98,8 +104,13 @@ export default class LoginView extends Vue {
 .login-title {
   font-size: 3rem;
   margin-bottom: 0.2rem;
-  color: #3a9bdc;
+  color: var(--color-primary);
   font-weight: 700;
+  transition: transform 0.2s ease;
+}
+
+.login-title:hover {
+  transform: scale(1.05);
 }
 
 /* Subtítulo */
@@ -135,13 +146,13 @@ export default class LoginView extends Vue {
 
 .login-form input:focus {
   outline: none;
-  border-color: #3a9bdc;
-  box-shadow: 0 0 6px #3a9bdc;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 6px var(--color-primary);
 }
 
 /* Botão */
 .btn-login {
-  background-color: #3a9bdc;
+  background-color: var(--color-primary);
   color: white;
   font-weight: 700;
   padding: 0.9rem;
@@ -153,7 +164,7 @@ export default class LoginView extends Vue {
 }
 
 .btn-login:hover {
-  background-color: #3180c2;
+  background-color: var(--color-primary-light);
 }
 
 /* Rodapé com link */
@@ -164,7 +175,7 @@ export default class LoginView extends Vue {
 }
 
 .login-footer a {
-  color: #3a9bdc;
+  color: var(--color-primary);
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
