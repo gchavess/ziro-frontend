@@ -124,7 +124,6 @@ export default class LancamentoModal extends Vue {
       (this.acao === this.acaoButtonIcon.ALTERAR ||
         this.acao === this.acaoButtonIcon.EXCLUIR)
     ) {
-      console.log("this.lancamentoSelecionado", this.lancamentoSelecionado);
       this.form = {
         ...this.lancamentoSelecionado,
         conta: this.lancamentoSelecionado.conta

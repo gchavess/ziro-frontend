@@ -65,6 +65,7 @@ export default class GroupButton extends Vue {
 .icon {
   width: 24px;
   height: 24px;
+  min-width: 24px;
   fill: currentColor;
 }
 </style>

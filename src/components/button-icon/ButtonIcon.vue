@@ -27,6 +27,8 @@
 import { AcaoButtonIcon } from "@/enums/AcaoButtonIcon";
 import {
   mdiCheck,
+  mdiChevronDown,
+  mdiChevronUp,
   mdiCircle,
   mdiCogOutline,
   mdiPencil,
@@ -61,6 +63,10 @@ export default class ButtonIcon extends Vue {
         return mdiThumbUpOutline;
       case AcaoButtonIcon.CHECK:
         return mdiCheck;
+      case AcaoButtonIcon.EXPANDIR:
+        return mdiChevronDown;
+      case AcaoButtonIcon.RECOLHER:
+        return mdiChevronUp;
       default:
         return mdiCircle;
     }
@@ -82,6 +88,10 @@ export default class ButtonIcon extends Vue {
         return "Adicionar";
       case AcaoButtonIcon.CHECK:
         return "Salvar";
+      case AcaoButtonIcon.EXPANDIR:
+        return "Expandir";
+      case AcaoButtonIcon.RECOLHER:
+        return "Recolher";
       default:
         return "";
     }

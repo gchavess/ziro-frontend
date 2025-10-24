@@ -15,7 +15,7 @@
 
 <script lang="ts">
 import TreeNode from "@/components/tree/TreeNode.vue";
-import { Component, Prop, Vue } from "vue-facing-decorator";
+import { Component, Prop, Vue, Watch } from "vue-facing-decorator";
 
 interface TreeNodeData {
   id: string | number;
@@ -33,14 +33,73 @@ export default class Tree extends Vue {
 
   public itemSelecionado: TreeNodeData | null = null;
 
+  private expandedNodeIds: (string | number)[] = [];
+  private selectedNodeId: string | number | null = null;
+
+  mounted() {
+    this.saveState();
+  }
+
+  // Observa mudanças da prop treeData
+  @Watch("treeData", { deep: true, immediate: true })
+  onTreeDataChanged() {
+    this.setExpandedNodes(this.treeData, this.expandedNodeIds);
+    if (this.selectedNodeId != null) {
+      this.itemSelecionado = this.findNodeById(
+        this.treeData,
+        this.selectedNodeId
+      );
+    }
+  }
+
   public toggleNode(node: TreeNodeData) {
     node.expanded = !node.expanded;
+    this.saveState();
   }
 
   public selectNode(node: TreeNodeData) {
     this.itemSelecionado = node;
-
+    this.selectedNodeId = node.id;
     this.$emit("itemSelecionado", this.itemSelecionado);
+  }
+
+  private saveState() {
+    this.expandedNodeIds = this.getExpandedNodes(this.treeData);
+    this.selectedNodeId = this.itemSelecionado?.id ?? null;
+  }
+
+  private getExpandedNodes(nodes: TreeNodeData[]): (string | number)[] {
+    let result: (string | number)[] = [];
+    for (const node of nodes) {
+      if (node.expanded) result.push(node.id);
+      if (node.children)
+        result = result.concat(this.getExpandedNodes(node.children));
+    }
+    return result;
+  }
+
+  private setExpandedNodes(
+    nodes: TreeNodeData[],
+    expandedNodes: (string | number)[]
+  ) {
+    for (const node of nodes) {
+      node.expanded = expandedNodes.includes(node.id);
+      if (node.children) this.setExpandedNodes(node.children, expandedNodes);
+    }
+  }
+
+  private findNodeById(
+    nodes: TreeNodeData[],
+    id: string | number
+  ): TreeNodeData | null {
+    for (const node of nodes) {
+      if (node.id === id) return node;
+      if (node.children) {
+        const found = this.findNodeById(node.children, id);
+        if (found) return found;
+      }
+    }
+    return null;
   }
 }
 </script>
@@ -73,7 +132,7 @@ export default class Tree extends Vue {
 
 .tree-node-label.selected {
   position: relative;
-  background-color: #e0e7ff;
+  background-color: var(--color-primary-bg);
 }
 
 .toggle-icon {

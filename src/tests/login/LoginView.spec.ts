@@ -36,6 +36,13 @@ describe("LoginView.vue", () => {
         },
       },
     });
+
+    // Mock global do toast
+    (window as any).$toast = {
+      error: vi.fn(),
+      success: vi.fn(),
+    };
+
     mockLogin.mockReset();
     mockRouterPush.mockReset();
   });
@@ -64,11 +71,15 @@ describe("LoginView.vue", () => {
 
   it("chama AuthService.login e navega ao fazer login com sucesso", async () => {
     mockLogin.mockResolvedValue({
-      data: { token: "123token", usuarioId: 1 },
+      data: {
+        token: "123token",
+        usuarioId: 1,
+        nome: "Usuário Teste",
+        iniciaisNome: "UT",
+      },
     });
 
     await wrapper.setData({ email: "teste@teste.com", password: "123456" });
-
     await wrapper.find("form").trigger("submit.prevent");
 
     expect(mockLogin).toHaveBeenCalledWith({
@@ -76,7 +87,6 @@ describe("LoginView.vue", () => {
       senha: "123456",
     });
 
-    // Aguarda o then do promise
     await wrapper.vm.$nextTick();
 
     expect(mockRouterPush).toHaveBeenCalledWith({
@@ -84,18 +94,17 @@ describe("LoginView.vue", () => {
     });
   });
 
-  it("mostra alert em caso de erro de login", async () => {
-    const alertSpy = vi.spyOn(window, "alert").mockImplementation(() => {});
+  it("mostra toast em caso de erro de login", async () => {
     mockLogin.mockRejectedValue(new Error("Erro"));
 
     await wrapper.setData({ email: "erro@teste.com", password: "0000" });
     await wrapper.find("form").trigger("submit.prevent");
 
-    // Aguarda o catch do promise
     await wrapper.vm.$nextTick();
 
-    expect(alertSpy).toHaveBeenCalledWith("Email ou senha inválidos.");
-    alertSpy.mockRestore();
+    expect(window.$toast.error).toHaveBeenCalledWith(
+      "Email ou senha inválidos"
+    );
   });
 
   it("navega para cadastro ao clicar no link", async () => {

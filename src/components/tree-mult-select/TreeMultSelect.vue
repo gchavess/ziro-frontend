@@ -2,7 +2,7 @@
   <div class="tree">
     <ul class="tree-root">
       <tree-node-mult-select
-        v-for="node in treeData"
+        v-for="node in localTreeData"
         :key="node.id"
         :node="node"
         @toggle="toggleNode"
@@ -15,7 +15,7 @@
 
 <script lang="ts">
 import TreeNodeMultSelect from "@/components/tree-mult-select/TreeNodeMultSelect.vue";
-import { Component, Prop, Vue } from "vue-facing-decorator";
+import { Component, Prop, Vue, Watch } from "vue-facing-decorator";
 
 interface TreeNodeData {
   id: string | number;
@@ -31,7 +31,43 @@ interface TreeNodeData {
 export default class TreeMultSelect extends Vue {
   @Prop({ required: true }) public treeData!: TreeNodeData[];
 
+  public localTreeData: TreeNodeData[] = [];
   public itensSelecionados: TreeNodeData[] = [];
+
+  created() {
+    this.mergeTreeData(this.treeData);
+  }
+
+  @Watch("treeData")
+  onWatcherTreeData() {
+    this.mergeTreeData(this.treeData);
+    this.itensSelecionados = [];
+    this.emitirItensSelecionados();
+  }
+
+  private mergeTreeData(newData: TreeNodeData[]) {
+    const preserveExpanded = (
+      oldNode: TreeNodeData | undefined,
+      newNode: TreeNodeData
+    ) => {
+      if (oldNode) {
+        newNode.expanded = oldNode.expanded;
+      }
+      if (newNode.children) {
+        newNode.children.forEach((child) => {
+          const matchingOld = oldNode?.children?.find((c) => c.id === child.id);
+          preserveExpanded(matchingOld, child);
+        });
+      }
+    };
+
+    newData.forEach((node) => {
+      const oldNode = this.localTreeData.find((n) => n.id === node.id);
+      preserveExpanded(oldNode, node);
+    });
+
+    this.localTreeData = newData;
+  }
 
   public toggleNode(node: TreeNodeData) {
     node.expanded = !node.expanded;
@@ -41,21 +77,18 @@ export default class TreeMultSelect extends Vue {
     const isSelected = this.itensSelecionados.some((n) => n.id === node.id);
 
     if (isSelected) {
-      // remover nó e filhos
       this.removeNodeAndChildren(node);
     } else {
-      // adicionar nó e filhos
       this.addNodeAndChildren(node);
     }
 
-    this.$emit("itensSelecionados", this.itensSelecionados);
+    this.emitirItensSelecionados();
   }
 
   private addNodeAndChildren(node: TreeNodeData) {
     if (!this.itensSelecionados.some((n) => n.id === node.id)) {
       this.itensSelecionados.push(node);
     }
-
     if (node.children) {
       node.children.forEach((child) => this.addNodeAndChildren(child));
     }
@@ -65,10 +98,13 @@ export default class TreeMultSelect extends Vue {
     this.itensSelecionados = this.itensSelecionados.filter(
       (n) => n.id !== node.id
     );
-
     if (node.children) {
       node.children.forEach((child) => this.removeNodeAndChildren(child));
     }
+  }
+
+  private emitirItensSelecionados() {
+    this.$emit("itensSelecionados", this.itensSelecionados);
   }
 }
 </script>
@@ -98,7 +134,7 @@ export default class TreeMultSelect extends Vue {
 
 .tree-node-label.selected {
   position: relative;
-  background-color: #e0e7ff;
+  background-color: var(--color-primary-bg);
 }
 
 .toggle-icon {

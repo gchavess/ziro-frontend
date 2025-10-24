@@ -2,7 +2,7 @@
   <div class="conteudo-modelagem-financeira-view">
     <h1 class="titulo-2">BI Financeiro</h1>
 
-    <div class="flex gap-4" style="height: 95%">
+    <div class="flex gap-4 wrapper-modelagem-financeira-view">
       <div class="container-tree">
         <button-icon
           v-if="!treeModoAssociacao"
@@ -86,48 +86,43 @@
         </div>
       </div>
 
-      <div
-        style="width: 100%"
-        :style="`${
-          tipoVisualizacaoGrafico === acaoButtonIcon.GRAFICO_PIZZA
-            ? 'height: calc(100vh - 200px)'
-            : 'height: calc(100vh - 200px)'
-        }`"
-      >
-        <div style="display: flex">
-          <group-button
-            :acoes="[
-              acaoButtonIcon.GRAFICO_LINHA,
-              acaoButtonIcon.GRAFICO_BARRA,
-              acaoButtonIcon.GRAFICO_PIZZA,
-            ]"
-            @onClick="alterouVisualizacaoGrafico($event)"
-          />
+      <div class="container-dashboard-bi">
+        <div class="container-filtros-dashboard-bi">
+          <div class="wrapper-filtros-dashboard-bi">
+            <div class="filtros-dashboard-bi">
+              <group-button
+                :acoes="[
+                  acaoButtonIcon.GRAFICO_LINHA,
+                  acaoButtonIcon.GRAFICO_BARRA,
+                  acaoButtonIcon.GRAFICO_PIZZA,
+                ]"
+                @onClick="alterouVisualizacaoGrafico($event)"
+              />
 
-          <input-text
-            class="ml-2"
-            v-model="filtro.dataInicio"
-            :type="'date'"
-            :label="'Data Início'"
-            @change="preencherGrafico()"
-          />
+              <input-text
+                class="ml-2"
+                v-model="filtro.dataInicio"
+                :type="'date'"
+                :label="'Data Início'"
+                @change="preencherGrafico()"
+              />
 
-          <input-text
-            class="ml-2"
-            v-model="filtro.dataFim"
-            :type="'date'"
-            :label="'Data Início'"
-            @change="preencherGrafico()"
-          />
+              <input-text
+                class="ml-2"
+                v-model="filtro.dataFim"
+                :type="'date'"
+                :label="'Data Início'"
+                @change="preencherGrafico()"
+              />
 
-          <switch-button
-            class="ml-2"
-            label="Visão detalhada"
-            v-model="visaoDetalhada"
-            @change="preencherGrafico"
-          />
+              <switch-button
+                class="ml-2"
+                label="Visão detalhada"
+                v-model="visaoDetalhada"
+                @change="preencherGrafico"
+              />
+            </div>
 
-          <div style="position: absolute; right: 2rem">
             <primary-button
               texto="Análise Financeira com IA"
               :cor="buttonColor.ALERTA"
@@ -458,20 +453,49 @@ export default class BiView extends Vue {
   height: 100%;
   overflow: hidden;
 
-  .container-tree {
-    width: 300px;
-    height: calc(100vh - 200px);
-  }
+  .wrapper-modelagem-financeira-view {
+    height: 95%;
 
-  .container-panel-menu-natureza-contexto {
-    width: 300px;
-    position: relative;
-  }
+    .container-tree {
+      width: 300px;
+      height: calc(100vh - 200px);
+    }
 
-  .botoes-associar-natureza {
-    display: flex;
-    justify-content: flex-end;
-    margin: 16px;
+    .container-panel-menu-natureza-contexto {
+      width: 300px;
+      position: relative;
+    }
+
+    .botoes-associar-natureza {
+      display: flex;
+      justify-content: flex-end;
+      margin: 16px;
+    }
+
+    .container-dashboard-bi {
+      width: 100%;
+      height: calc(100vh - 230px);
+
+      .container-filtros-dashboard-bi {
+        width: calc(100vw - 700px);
+        overflow-y: auto;
+        overflow-x: unset;
+
+        .wrapper-filtros-dashboard-bi {
+          margin-top: 8px;
+          display: flex;
+          justify-content: space-between;
+          white-space: nowrap;
+          gap: 8px;
+
+          .filtros-dashboard-bi {
+            display: flex;
+            white-space: nowrap;
+            gap: 8px;
+          }
+        }
+      }
+    }
   }
 }
 </style>

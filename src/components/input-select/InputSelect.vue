@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from "vue-facing-decorator";
+import { Component, Prop, Vue } from "vue-facing-decorator";
 import OptionItem from "./OptionItem.vue";
 
 interface Option {
@@ -44,22 +44,11 @@ export default class InputSelect extends Vue {
 
   isOpen = false;
 
-  mounted() {
-    console.log("InputSelect mounted with modelValue:", this.modelValue);
-  }
-
-  @Watch("modelValue")
-  onModelValueChange(newValue: string) {
-    console.log("modelValue changed to:", newValue);
-  }
-
   get selectedLabel(): string | null {
     const findLabel = (opts: Option[]): string | null => {
       for (const opt of opts) {
         if (opt.value == this.modelValue)
-          console.log("Found matching option:", opt.label);
-
-        if (opt.value == this.modelValue) return opt.label;
+          if (opt.value == this.modelValue) return opt.label;
         if (opt.children) {
           const childLabel = findLabel(opt.children);
           if (childLabel) return childLabel;

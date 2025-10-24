@@ -67,6 +67,8 @@ export default class SincronizacaoFonteDadoModal extends Vue {
 
     await CsvImportService.importar(this.arquivoSelecionado)
       .then(() => {
+        window.$toast.success("Dados importados com sucesso");
+
         this.fecharModal();
       })
       .catch(() => {

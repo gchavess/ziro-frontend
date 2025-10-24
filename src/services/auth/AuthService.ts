@@ -18,6 +18,13 @@ class AuthService extends ServiceBase {
       `${this.path}/validar-token`
     );
   }
+
+  async criar(usuario: UsuarioDTO): Promise<UsuarioDTO> {
+    return this.$axios.post<UsuarioDTO, UsuarioDTO>(
+      `${this.path}/conta`,
+      usuario
+    );
+  }
 }
 
 export default new AuthService();

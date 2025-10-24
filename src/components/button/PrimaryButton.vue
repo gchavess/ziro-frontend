@@ -94,6 +94,7 @@ export default class PrimaryButton extends Vue {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  white-space: nowrap;
 }
 
 .spinner {

@@ -1,8 +1,9 @@
-import UsuarioService from "@/services/usuario/UsuarioService";
+import AuthService from "@/services/auth/AuthService";
 import CadastroView from "@/views/login/CadastroView.vue";
 import { mount } from "@vue/test-utils";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-vi.mock("@/services/usuario/UsuarioService", () => ({
+vi.mock("@/services/auth/AuthService", () => ({
   default: {
     criar: vi.fn(),
   },
@@ -16,6 +17,12 @@ describe("CadastroView.vue", () => {
     pushMock = vi.fn();
     alertMock = vi.fn();
     vi.stubGlobal("alert", alertMock);
+
+    // Mock do toast global
+    (window as any).$toast = {
+      error: vi.fn(),
+      success: vi.fn(),
+    };
   });
 
   afterEach(() => {
@@ -55,11 +62,11 @@ describe("CadastroView.vue", () => {
     await wrapper.find("form").trigger("submit.prevent");
 
     expect(alertMock).toHaveBeenCalledWith("As senhas não coincidem!");
-    expect(UsuarioService.criar).not.toHaveBeenCalled();
+    expect(AuthService.criar).not.toHaveBeenCalled();
   });
 
   it("realiza cadastro com sucesso", async () => {
-    (UsuarioService.criar as any).mockResolvedValue({ nome: "Usuário Teste" });
+    (AuthService.criar as any).mockResolvedValue({ nome: "Usuário Teste" });
 
     const wrapper = factory();
 
@@ -69,20 +76,22 @@ describe("CadastroView.vue", () => {
     await wrapper.find("#confirmPassword").setValue("123456");
 
     await wrapper.find("form").trigger("submit.prevent");
+    await wrapper.vm.$nextTick();
 
-    expect(UsuarioService.criar).toHaveBeenCalledWith({
+    expect(AuthService.criar).toHaveBeenCalledWith({
       nome: "Usuário Teste",
       email: "teste@email.com",
       senha: "123456",
     });
-    expect(alertMock).toHaveBeenCalledWith(
-      "Usuário Usuário Teste cadastrado com sucesso!"
+
+    expect(window.$toast.success).toHaveBeenCalledWith(
+      "Conta criada com sucesso!"
     );
     expect(pushMock).toHaveBeenCalledWith({ name: "Login" });
   });
 
   it("mostra erro quando cadastro falha", async () => {
-    (UsuarioService.criar as any).mockRejectedValue(new Error("Falha"));
+    (AuthService.criar as any).mockRejectedValue(new Error("Falha"));
 
     const wrapper = factory();
 
@@ -92,9 +101,10 @@ describe("CadastroView.vue", () => {
     await wrapper.find("#confirmPassword").setValue("123456");
 
     await wrapper.find("form").trigger("submit.prevent");
+    await wrapper.vm.$nextTick();
 
-    expect(alertMock).toHaveBeenCalledWith(
-      "Ocorreu um erro ao cadastrar. Tente novamente."
+    expect(window.$toast.error).toHaveBeenCalledWith(
+      "Ocorreu um erro ao cadastrar. Tente novamente"
     );
     expect(pushMock).not.toHaveBeenCalled();
   });
