@@ -55,7 +55,7 @@ describe("SincronizacaoFonteDadoModal.vue", () => {
   let toastMock: any;
 
   beforeEach(() => {
-    toastMock = { error: vi.fn() };
+    toastMock = { error: vi.fn(), success: vi.fn() };
     // @ts-ignore
     window.$toast = toastMock;
   });
@@ -105,9 +105,13 @@ describe("SincronizacaoFonteDadoModal.vue", () => {
     expect(wrapper.vm.carregando).toBe(true);
 
     await promise;
+    await wrapper.vm.$nextTick(); // garante que emit foi processado
 
     expect(CsvImportService.importar).toHaveBeenCalledWith("arquivo.csv");
     expect(wrapper.emitted("modalAberta")![0]).toEqual([false]);
+    expect(toastMock.success).toHaveBeenCalledWith(
+      "Dados importados com sucesso"
+    );
     expect(wrapper.vm.carregando).toBe(false);
   });
 
@@ -119,6 +123,7 @@ describe("SincronizacaoFonteDadoModal.vue", () => {
     wrapper.vm.arquivoSelecionado = "arquivo.csv";
 
     await wrapper.vm.salvar();
+    await wrapper.vm.$nextTick();
 
     expect(toastMock.error).toHaveBeenCalledWith("Erro ao importar os dados");
     expect(wrapper.vm.carregando).toBe(false);
