@@ -97,4 +97,12 @@ input:focus + .label .text,
 input:focus + .label .text {
   color: var(--color-primary);
 }
+
+input:focus + .label .text,
+input:not(:placeholder-shown) + .label .text {
+  font-size: 12px;
+  transform: translate(0, -150%);
+  background-color: var(--color-bg);
+  padding: 0 4px;
+}
 </style>

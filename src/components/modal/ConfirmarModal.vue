@@ -7,7 +7,7 @@
     @salvar="$emit('confirmar')"
   >
     <template #body>
-      <div class="text-center">
+      <div>
         <p class="mb-4">{{ mensagem }}</p>
         <strong v-if="dadoExtra">{{ dadoExtra }}</strong>
       </div>
