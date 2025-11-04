@@ -4,6 +4,7 @@
     :titulo="tituloModal"
     :tamanho="'grande'"
     :exibirBoaoSalvar="false"
+    :exibirBarraRolagem="true"
     @cancelar="cancelar"
     @salvar="salvar"
   >
@@ -625,7 +626,6 @@ export default class AnaliseFinanceiraModal extends Vue {
 <style scoped>
 .container-dados-analise-financeira-modal {
   height: 800px;
-  overflow: auto;
 }
 
 .fato-container {

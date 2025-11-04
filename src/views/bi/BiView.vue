@@ -1,94 +1,109 @@
 <template>
-  <div class="conteudo-modelagem-financeira-view">
+  <div
+    class="conteudo-modelagem-financeira-view"
+    ref="conteudoModelagemFinanceiraView"
+  >
     <h1 class="titulo-2">BI Financeiro</h1>
 
     <div class="flex gap-4 wrapper-modelagem-financeira-view">
-      <div class="container-tree">
-        <button-icon
-          v-if="!treeModoAssociacao"
-          :desabilitado="treeModoAssociacao"
-          :acao="acaoButtonIcon.INCLUIR"
-          @click="abrirModalConta(acaoButtonIcon.INCLUIR)"
-        />
-        <button-icon
-          v-if="!treeModoAssociacao"
-          :desabilitado="!itemTreeContaSelecionado || treeModoAssociacao"
-          :acao="acaoButtonIcon.ALTERAR"
-          @click="abrirModalConta(acaoButtonIcon.ALTERAR)"
-        />
-        <button-icon
-          v-if="!treeModoAssociacao"
-          :desabilitado="!itemTreeContaSelecionado || treeModoAssociacao"
-          :acao="acaoButtonIcon.EXCLUIR"
-          @click="abrirModalConta(acaoButtonIcon.EXCLUIR)"
-        />
-        <button-icon
-          :acao="acaoButtonIcon.CONFIGURAR"
-          @click="treeModoAssociacao = !treeModoAssociacao"
-        />
-
-        <tree-mult-select
-          v-if="treeModoAssociacao"
-          :treeData="dadosTreeConta"
-          @itensSelecionados="alterouItensSelecionadosTreeAssociacao($event)"
-        />
-
-        <tree
-          v-else
-          :treeData="dadosTreeConta"
-          @itemSelecionado="itemTreeContaSelecionado = $event"
-        />
-      </div>
-
-      <div class="container-panel-menu-natureza-contexto">
-        <button-icon
-          @click="abrirModalContextoNatureza(acaoButtonIcon.INCLUIR)"
-          :acao="acaoButtonIcon.INCLUIR"
-        />
-        <button-icon
-          @click="abrirModalContextoNatureza(acaoButtonIcon.ALTERAR)"
-          :acao="acaoButtonIcon.ALTERAR"
-          :desabilitado="
-            (!contextoContaSelecionado && !naturezaContaSelecionada) ||
-            contextoContaSelecionado?.codigo === 'TODOS'
-          "
-        />
-        <button-icon
-          @click="abrirModalContextoNatureza(acaoButtonIcon.EXCLUIR)"
-          :acao="acaoButtonIcon.EXCLUIR"
-          :desabilitado="
-            (!contextoContaSelecionado && !naturezaContaSelecionada) ||
-            contextoContaSelecionado?.codigo === 'TODOS'
-          "
-        />
-        <panel-menu
-          :items="naturezasContaAgrupadas"
-          @itemSelecionado="handleSelecionouContextoNatureza"
-        />
-
-        <div class="botoes-associar-natureza">
-          <primary-button
-            texto="Ignorar"
-            :cor="buttonColor.SECUNDARIO"
-            :desabilitado="true"
+      <div style="display: flex" class="wrapper-tree-e-panel-menu gap-4">
+        <div class="container-tree">
+          <button-icon
+            v-if="!treeModoAssociacao"
+            :desabilitado="treeModoAssociacao"
+            :acao="acaoButtonIcon.INCLUIR"
+            @click="abrirModalConta(acaoButtonIcon.INCLUIR)"
+          />
+          <button-icon
+            v-if="!treeModoAssociacao"
+            :desabilitado="!itemTreeContaSelecionado || treeModoAssociacao"
+            :acao="acaoButtonIcon.ALTERAR"
+            @click="abrirModalConta(acaoButtonIcon.ALTERAR)"
+          />
+          <button-icon
+            v-if="!treeModoAssociacao"
+            :desabilitado="!itemTreeContaSelecionado || treeModoAssociacao"
+            :acao="acaoButtonIcon.EXCLUIR"
+            @click="abrirModalConta(acaoButtonIcon.EXCLUIR)"
+          />
+          <button-icon
+            :acao="acaoButtonIcon.CONFIGURAR"
+            @click="treeModoAssociacao = !treeModoAssociacao"
           />
 
-          <primary-button
-            class="ml-2"
-            texto="Associar"
-            :cor="buttonColor.PRIMARIO"
+          <tree-mult-select
+            v-if="treeModoAssociacao"
+            :treeData="dadosTreeConta"
+            @itensSelecionados="alterouItensSelecionadosTreeAssociacao($event)"
+          />
+
+          <tree
+            v-else
+            :treeData="dadosTreeConta"
+            @itemSelecionado="itemTreeContaSelecionado = $event"
+          />
+        </div>
+
+        <div class="container-panel-menu-natureza-contexto">
+          <button-icon
+            @click="abrirModalContextoNatureza(acaoButtonIcon.INCLUIR)"
+            :acao="acaoButtonIcon.INCLUIR"
+          />
+          <button-icon
+            @click="abrirModalContextoNatureza(acaoButtonIcon.ALTERAR)"
+            :acao="acaoButtonIcon.ALTERAR"
             :desabilitado="
-              !naturezaContaSelecionada ||
-              idsSelecionadosTreeAssociacao.length === 0
+              (!contextoContaSelecionado && !naturezaContaSelecionada) ||
+              contextoContaSelecionado?.codigo === 'TODOS'
             "
-            @click="associarNaturezas"
           />
+          <button-icon
+            @click="abrirModalContextoNatureza(acaoButtonIcon.EXCLUIR)"
+            :acao="acaoButtonIcon.EXCLUIR"
+            :desabilitado="
+              (!contextoContaSelecionado && !naturezaContaSelecionada) ||
+              contextoContaSelecionado?.codigo === 'TODOS'
+            "
+          />
+          <panel-menu
+            :items="naturezasContaAgrupadas"
+            @itemSelecionado="handleSelecionouContextoNatureza"
+          />
+
+          <div class="botoes-associar-natureza">
+            <primary-button
+              texto="Ignorar"
+              :cor="buttonColor.SECUNDARIO"
+              :desabilitado="true"
+            />
+
+            <primary-button
+              class="ml-2"
+              texto="Associar"
+              :cor="buttonColor.PRIMARIO"
+              :desabilitado="
+                !naturezaContaSelecionada ||
+                idsSelecionadosTreeAssociacao.length === 0
+              "
+              @click="associarNaturezas"
+            />
+          </div>
         </div>
       </div>
 
       <div class="container-dashboard-bi">
         <div class="container-filtros-dashboard-bi">
-          <div class="wrapper-filtros-dashboard-bi">
+          <button
+            class="btn-hamburger"
+            @click="showFiltrosMobile = !showFiltrosMobile"
+          >
+            ☰ Filtros
+          </button>
+
+          <div
+            class="wrapper-filtros-dashboard-bi"
+            :class="{ 'mobile-open': showFiltrosMobile }"
+          >
             <div class="filtros-dashboard-bi">
               <group-button
                 :acoes="[
@@ -265,53 +280,10 @@ export default class BiView extends Vue {
   };
   public keyGrafico: number = 0;
 
+  public showFiltrosMobile: boolean = false;
+
   public carregandoAnaliseFinanceira: boolean = false;
   public modalAbertaAnaliseFinanceira = false;
-  // [
-  //   {
-  //     acoes: [
-  //       "Desenvolvimento de um plano de vendas anual com metas mensais.",
-  //       "Diversificação da base de clientes e fontes de receita.",
-  //       "Investimento em marketing e vendas para gerar leads e receita ao longo do ano.",
-  //       "Análise da sazonalidade e implementação de estratégias para mitigar o impacto dos meses de baixa receita.",
-  //     ],
-  //     causas: [
-  //       "Falta de estratégia de vendas consistente ao longo do ano.",
-  //       "Dependência excessiva de um único evento ou cliente em setembro.",
-  //       "Problemas com o processo de vendas ou marketing.",
-  //       "Sazonalidade extrema do negócio, sem planejamento para os meses de baixa.",
-  //     ],
-  //     fato: "Receita de vendas concentrada apenas em setembro de 2025 (R$ 6.000,00), com zero receita nos demais meses.",
-  //   },
-  //   {
-  //     acoes: [
-  //       "Implementação de um sistema de controle de custos mais rigoroso.",
-  //       "Análise detalhada dos custos variáveis para identificar e eliminar gastos desnecessários.",
-  //       "Melhoria dos processos de gestão de estoque e suprimentos.",
-  //       "Otimização dos processos de produção ou operação para reduzir custos.",
-  //     ],
-  //     causas: [
-  //       "Falta de controle de custos.",
-  //       "Gastos imprevistos ou não planejados.",
-  //       "Problemas com a gestão de estoque ou suprimentos.",
-  //       "Processos ineficientes de produção ou operação.",
-  //     ],
-  //     fato: "Custos variáveis presentes apenas em maio e julho de 2025 (R$ 600,00 e R$ 3.000,00, respectivamente), sem relação aparente com a receita.",
-  //   },
-  //   {
-  //     acoes: [
-  //       "Melhorar o planejamento da produção e vendas, alinhando-as à demanda projetada.",
-  //       "Revisão do processo de gestão de estoque para reduzir custos com itens obsoletos.",
-  //       "Implementar um sistema de previsão de demanda mais preciso.",
-  //     ],
-  //     causas: [
-  //       "Problemas de planejamento e sincronização entre produção e vendas.",
-  //       "Estoque excessivo ou obsoleto gerando custos sem receita correspondente.",
-  //       "Falta de previsão de demanda e consequente produção em excesso.",
-  //     ],
-  //     fato: "Descasamento entre receita e custos variáveis: custos significativos em meses sem receita.",
-  //   },
-  // ];
 
   public filtro: { dataInicio: string; dataFim: string } = {
     dataInicio: "2025-01-01",
@@ -328,12 +300,22 @@ export default class BiView extends Vue {
     this.preencherTreeContas();
     this.preencherListaNaturezasContaAgrupada();
     this.preencherGrafico();
+
+    this.$nextTick(() => {
+      this.adicionarEventoScrollConteudoModelagemFinanceiraView();
+    });
+  }
+
+  beforeUnmount() {
+    this.removerEventoScrollConteudoModelagemFinanceiraView();
   }
 
   private async preencherGrafico() {
     let service = this.visaoDetalhada
       ? LancamentoService.montarGraficoDetalhado.bind(LancamentoService)
       : LancamentoService.montarGraficoSimplificado.bind(LancamentoService);
+
+    this.fecharFiltrosMobile();
 
     await service(
       this.filtro.dataInicio,
@@ -430,6 +412,8 @@ export default class BiView extends Vue {
 
   public async alterouVisualizacaoGrafico(novoTipo: AcaoButtonIcon) {
     this.tipoVisualizacaoGrafico = novoTipo;
+
+    this.fecharFiltrosMobile();
   }
 
   public alterouItensSelecionadosTreeAssociacao(
@@ -444,6 +428,35 @@ export default class BiView extends Vue {
 
   public async abrirModalAnaliseFinanceira() {
     this.modalAbertaAnaliseFinanceira = true;
+    this.fecharFiltrosMobile();
+  }
+
+  private adicionarEventoScrollConteudoModelagemFinanceiraView() {
+    const container = this.$refs.conteudoModelagemFinanceiraView as
+      | HTMLElement
+      | undefined;
+    if (container) {
+      container.addEventListener("scroll", this.handleScrollFiltros);
+    }
+  }
+
+  private removerEventoScrollConteudoModelagemFinanceiraView() {
+    const container = this.$refs.conteudoModelagemFinanceiraView as
+      | HTMLElement
+      | undefined;
+    if (container) {
+      container.removeEventListener("scroll", this.handleScrollFiltros);
+    }
+  }
+
+  private handleScrollFiltros() {
+    this.fecharFiltrosMobile();
+  }
+
+  private fecharFiltrosMobile() {
+    if (this.showFiltrosMobile) {
+      this.showFiltrosMobile = false;
+    }
   }
 }
 </script>
@@ -451,10 +464,10 @@ export default class BiView extends Vue {
 <style scoped>
 .conteudo-modelagem-financeira-view {
   height: 100%;
-  overflow: hidden;
+  overflow: auto;
 
   .wrapper-modelagem-financeira-view {
-    height: 95%;
+    height: calc(100vh - 160px);
 
     .container-tree {
       width: 300px;
@@ -481,6 +494,16 @@ export default class BiView extends Vue {
         overflow-y: auto;
         overflow-x: unset;
 
+        .btn-hamburger {
+          display: none;
+          background-color: #e6e6e6;
+          padding: 0.5rem 1rem;
+          font-size: 1rem;
+          cursor: pointer;
+          margin-bottom: 0.5rem;
+          border-radius: 6px;
+        }
+
         .wrapper-filtros-dashboard-bi {
           margin-top: 8px;
           display: flex;
@@ -495,6 +518,99 @@ export default class BiView extends Vue {
           }
         }
       }
+    }
+  }
+
+  @media (max-width: 1024px) {
+    .conteudo-modelagem-financeira-view {
+      overflow: auto !important;
+    }
+
+    .container-tree {
+      width: 100% !important;
+    }
+
+    .tree {
+      width: 100%;
+    }
+
+    .wrapper-modelagem-financeira-view {
+      flex-direction: column-reverse;
+      height: auto;
+      gap: 50px;
+    }
+
+    .container-tree {
+      height: auto !important;
+    }
+
+    .filtros-dashboard-bi {
+      gap: 12px !important;
+      margin-top: 8px;
+    }
+
+    .container-tree,
+    .container-panel-menu-natureza-contexto,
+    .container-dashboard-bi {
+      width: 100%;
+      min-width: unset;
+      height: auto;
+      border-right: none;
+      margin-bottom: 1rem;
+    }
+
+    .container-filtros-dashboard-bi {
+      overflow-x: hidden !important;
+      width: 100% !important;
+      position: relative;
+    }
+
+    .wrapper-filtros-dashboard-bi {
+      flex-wrap: nowrap;
+      position: fixed;
+      z-index: 1000;
+      overflow-x: auto;
+      padding: 8px 16px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .container-dashboard-bi .btn-hamburger {
+      display: block !important ;
+    }
+
+    .container-dashboard-bi .wrapper-filtros-dashboard-bi {
+      display: none !important;
+      flex-direction: column;
+      max-height: 0;
+      overflow: hidden;
+    }
+
+    .container-dashboard-bi .wrapper-filtros-dashboard-bi.mobile-open {
+      display: flex !important;
+      max-height: 1000px;
+      background: white;
+    }
+
+    .wrapper-tree-e-panel-menu {
+      flex-direction: column-reverse;
+      gap: 1rem;
+    }
+
+    .container-panel-menu-natureza-contexto {
+      width: 100% !important;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .wrapper-filtros-dashboard-bi,
+    .filtros-dashboard-bi {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .botoes-associar-natureza {
+      flex-direction: column;
+      gap: 0.5rem;
     }
   }
 }

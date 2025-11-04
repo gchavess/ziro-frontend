@@ -2,36 +2,34 @@
   <div>
     <h1 class="titulo-2">Movimentação Financeira</h1>
 
-    <button-icon
-      @click="abrirModal(acaoButtonIcon.INCLUIR)"
-      :acao="acaoButtonIcon.INCLUIR"
-    />
-    <button-icon
-      @click="abrirModal(acaoButtonIcon.ALTERAR)"
-      :acao="acaoButtonIcon.ALTERAR"
-      :desabilitado="!lancamentoSelecionado"
-    />
-    <button-icon
-      @click="abrirModal(acaoButtonIcon.EXCLUIR)"
-      :acao="acaoButtonIcon.EXCLUIR"
-      :desabilitado="!lancamentoSelecionado"
-    />
+    <div class="botoes-acao">
+      <button-icon
+        @click="abrirModal(acaoButtonIcon.INCLUIR)"
+        :acao="acaoButtonIcon.INCLUIR"
+      />
+      <button-icon
+        @click="abrirModal(acaoButtonIcon.ALTERAR)"
+        :acao="acaoButtonIcon.ALTERAR"
+        :desabilitado="!lancamentoSelecionado"
+      />
+      <button-icon
+        @click="abrirModal(acaoButtonIcon.EXCLUIR)"
+        :acao="acaoButtonIcon.EXCLUIR"
+        :desabilitado="!lancamentoSelecionado"
+      />
+    </div>
 
-    <!-- Tabela -->
-    <table class="grid-movimentacao-financeira">
-      <thead>
-        <tr>
-          <th>Descrição</th>
-          <th>Valor</th>
-          <th>Conta</th>
-          <th>Data de Vencimento</th>
-          <th>Data de Pagamento</th>
-        </tr>
-      </thead>
-    </table>
-
-    <div class="tbody-scroll">
+    <div class="tabela-wrapper">
       <table class="grid-movimentacao-financeira">
+        <thead>
+          <tr>
+            <th>Descrição</th>
+            <th>Valor</th>
+            <th>Conta</th>
+            <th>Data de Vencimento</th>
+            <th>Data de Pagamento</th>
+          </tr>
+        </thead>
         <tbody>
           <tr
             v-for="(lancamento, index) in lancamentos"
@@ -48,16 +46,15 @@
         </tbody>
       </table>
     </div>
-  </div>
 
-  <lancamento-modal
-    :modalAberta="modalAbertaLancamento"
-    :acao="acaoBotao"
-    :lancamentoSelecionado="lancamentoSelecionado"
-    @recarregarGridLancamentos="preencherLancamentos"
-    @modalAberta="modalAbertaLancamento = $event"
-  >
-  </lancamento-modal>
+    <lancamento-modal
+      :modalAberta="modalAbertaLancamento"
+      :acao="acaoBotao"
+      :lancamentoSelecionado="lancamentoSelecionado"
+      @recarregarGridLancamentos="preencherLancamentos"
+      @modalAberta="modalAbertaLancamento = $event"
+    />
+  </div>
 </template>
 
 <script lang="ts">
@@ -123,31 +120,40 @@ export default class MovimentacaoFinanceiraView extends Vue {
 </script>
 
 <style scoped>
-.grid-movimentacao-financeira {
-  width: 100%;
-  border-collapse: collapse;
-  max-height: calc(100vh - 220px);
-  display: block;
-  overflow-y: auto;
+.botoes-acao {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
 }
 
-.grid-movimentacao-financeira thead,
-.grid-movimentacao-financeira tbody tr {
-  display: table;
+.tabela-wrapper {
   width: 100%;
-  table-layout: fixed;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  height: calc(100vh - 220px);
+}
+
+.grid-movimentacao-financeira {
+  width: 100%;
+  min-width: 700px;
+  border-collapse: collapse;
 }
 
 .grid-movimentacao-financeira thead {
+  background-color: var(--color-primary-light);
+  color: var(--color-bg);
   position: sticky;
   top: 0;
-  background-color: var(--color-primary-light);
   z-index: 1;
 }
 
-.grid-movimentacao-financeira thead th {
-  background-color: var(--color-primary-light);
-  color: var(--color-bg);
+.grid-movimentacao-financeira th,
+.grid-movimentacao-financeira td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .grid-movimentacao-financeira tbody tr:hover td {
@@ -156,17 +162,20 @@ export default class MovimentacaoFinanceiraView extends Vue {
   cursor: pointer;
 }
 
-/* Linha selecionada */
 .selecionado {
   background-color: var(--color-primary-light);
   color: var(--color-bg);
 }
 
-td {
-  vertical-align: middle;
-}
+@media (max-width: 768px) {
+  .grid-movimentacao-financeira {
+    min-width: 600px;
+  }
 
-.titulo {
-  color: var(--color-text);
+  .tabela-wrapper {
+    box-shadow: none;
+    border-radius: 4px;
+    height: calc(100vh - 260px);
+  }
 }
 </style>
