@@ -5,7 +5,7 @@
       <span class="titulo-4">{{ titulo }}</span>
       <slot name="header" />
 
-      <div class="container-body-modal">
+      <div class="container-body-modal" :style="styleContainerBodyModal">
         <slot name="body" />
       </div>
 
@@ -58,9 +58,12 @@ export default class Modal extends Vue {
   @Prop({ type: Boolean, default: true })
   public exibirBoaoSalvar!: boolean;
 
+  @Prop({ type: Boolean, default: false })
+  public exibirBarraRolagem!: boolean;
+
   public buttonColor = ButtonColor;
 
-  get classeTamanho() {
+  public get classeTamanho() {
     switch (this.tamanho) {
       case "pequeno":
         return "modal-pequeno";
@@ -69,6 +72,10 @@ export default class Modal extends Vue {
       default:
         return "modal-medio";
     }
+  }
+
+  public get styleContainerBodyModal() {
+    return this.exibirBarraRolagem ? "overflow-y: auto;" : "";
   }
 
   public cancelar() {
@@ -115,6 +122,7 @@ export default class Modal extends Vue {
 
 .modal-content .container-body-modal {
   padding-top: 1rem;
+  max-height: calc(100vh - 300px);
 }
 
 .modal-actions {

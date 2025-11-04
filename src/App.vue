@@ -3,7 +3,16 @@
     <nav v-if="mostrarBarraNavegacao" class="navbar">
       <div class="navbar-logo">Ziro</div>
 
-      <div class="navbar-link-user">
+      <div class="hamburger" @click="toggleMobileMenu">
+        <span :class="{ open: mobileMenuAberto }"></span>
+        <span :class="{ open: mobileMenuAberto }"></span>
+        <span :class="{ open: mobileMenuAberto }"></span>
+      </div>
+
+      <div
+        class="navbar-link-user"
+        :class="{ 'mobile-open': mobileMenuAberto }"
+      >
         <ul class="navbar-links">
           <li>
             <router-link to="/fontes-dados" active-class="active">
@@ -44,9 +53,9 @@
         </div>
       </div>
     </nav>
+
     <main :class="{ 'main-content': true, 'with-nav': mostrarBarraNavegacao }">
       <Toaster />
-
       <router-view />
     </main>
   </div>
@@ -60,14 +69,11 @@ import { mdiChevronDown } from "@mdi/js";
 import { Component, Vue } from "vue-facing-decorator";
 import { useRoute } from "vue-router";
 
-@Component({
-  components: { Toaster },
-  directives: {},
-  emits: [],
-})
+@Component({ components: { Toaster } })
 export default class App extends Vue {
   private route = useRoute();
   private dropdownAberto = false;
+  private mobileMenuAberto = false;
 
   public mdiChevronDown = mdiChevronDown;
 
@@ -104,11 +110,36 @@ export default class App extends Vue {
     this.dropdownAberto = !this.dropdownAberto;
   }
 
+  public toggleMobileMenu() {
+    this.mobileMenuAberto = !this.mobileMenuAberto;
+  }
+
   private handleClickOutside(event: MouseEvent) {
+    this.handleFecharDropdownMenuUsuario(event);
+    this.handleFecharDropdownMenuMobile(event);
+  }
+
+  private handleFecharDropdownMenuUsuario(event: MouseEvent) {
     const target = event.target as HTMLElement;
+
     const dropdown = this.$el.querySelector(".usuario-dropdown");
     if (dropdown && !dropdown.contains(target)) {
       this.dropdownAberto = false;
+    }
+  }
+
+  private handleFecharDropdownMenuMobile(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+
+    const navbarLinks = this.$el.querySelector(".navbar-link-user");
+    const hamburger = this.$el.querySelector(".hamburger");
+    if (
+      navbarLinks &&
+      hamburger &&
+      !navbarLinks.contains(target) &&
+      !hamburger.contains(target)
+    ) {
+      this.mobileMenuAberto = false;
     }
   }
 
@@ -128,9 +159,8 @@ export default class App extends Vue {
   background: linear-gradient(90deg, #ffffff, #f8f9fa);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   font-family: "Inter", sans-serif;
-  /* position: sticky; */
-  top: 0;
   z-index: 100;
+  position: relative;
 }
 
 .navbar-logo {
@@ -139,11 +169,6 @@ export default class App extends Vue {
   color: var(--color-primary);
   letter-spacing: -0.5px;
   cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.navbar-logo:hover {
-  transform: scale(1.05);
 }
 
 .navbar-link-user {
@@ -248,5 +273,69 @@ export default class App extends Vue {
 
 .dropdown-menu li:hover {
   background: #f3f4f6;
+}
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.hamburger span {
+  display: block;
+  width: 24px;
+  height: 3px;
+  background: #555555;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.hamburger span.open:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+.hamburger span.open:nth-child(2) {
+  opacity: 0;
+}
+.hamburger span.open:nth-child(3) {
+  transform: rotate(-45deg) translate(5px, -5px);
+}
+
+@media (max-width: 768px) {
+  .hamburger {
+    display: flex;
+  }
+
+  .navbar-link-user {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    flex-direction: column;
+    width: 200px;
+    gap: 0;
+    padding: 1rem;
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-20px);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+  }
+
+  .navbar-link-user.mobile-open {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .navbar-links {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .usuario-dropdown {
+    margin-top: 1rem;
+  }
 }
 </style>
