@@ -63,7 +63,7 @@ export default class LoginView extends Vue {
           dados.nome,
           dados.iniciaisNome
         );
-        this.$router.push({ name: "Movimentação Financeira" });
+        this.$router.push({ name: "BI Financeiro" });
       })
       .catch(() => {
         window.$toast.error("Email ou senha inválidos");
