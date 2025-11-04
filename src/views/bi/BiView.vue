@@ -528,6 +528,7 @@ export default class BiView extends Vue {
 
     .container-tree {
       width: 100% !important;
+      height: auto !important;
     }
 
     .tree {
@@ -538,10 +539,6 @@ export default class BiView extends Vue {
       flex-direction: column-reverse;
       height: auto;
       gap: 50px;
-    }
-
-    .container-tree {
-      height: auto !important;
     }
 
     .filtros-dashboard-bi {
@@ -565,15 +562,6 @@ export default class BiView extends Vue {
       position: relative;
     }
 
-    .wrapper-filtros-dashboard-bi {
-      flex-wrap: nowrap;
-      position: fixed;
-      z-index: 1000;
-      overflow-x: auto;
-      padding: 8px 16px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
-
     .container-dashboard-bi .btn-hamburger {
       display: block !important ;
     }
@@ -583,6 +571,12 @@ export default class BiView extends Vue {
       flex-direction: column;
       max-height: 0;
       overflow: hidden;
+      flex-wrap: nowrap;
+      position: fixed;
+      z-index: 1000;
+      overflow-x: auto;
+      padding: 8px 16px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
 
     .container-dashboard-bi .wrapper-filtros-dashboard-bi.mobile-open {
