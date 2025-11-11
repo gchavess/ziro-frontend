@@ -13,18 +13,26 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v3
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 20
 
       - name: Install dependencies
-        run: yarn install
+        run: yarn install --frozen-lockfile
 
       - name: Run tests with coverage
         run: yarn vitest run --coverage
+
+      - name: Debug coverage file
+        run: |
+          echo "=== Verificando se o relatório foi gerado ==="
+          ls -R coverage || echo "Pasta coverage não encontrada"
+          cat coverage/lcov.info | head -20 || echo "Arquivo lcov.info não encontrado"
 
       - name: Build project
         run: yarn build
