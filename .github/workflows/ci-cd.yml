@@ -28,17 +28,23 @@ jobs:
       - name: Run tests with coverage
         run: yarn vitest run --coverage
 
-      - name: Debug coverage file
+      - name: Verify coverage file
         run: |
-          echo "=== Verificando se o relatório foi gerado ==="
-          ls -R coverage || echo "Pasta coverage não encontrada"
-          cat coverage/lcov.info | head -20 || echo "Arquivo lcov.info não encontrado"
+          echo "=== Caminho atual ==="
+          pwd
+          echo "=== Verificando conteúdo da pasta coverage ==="
+          ls -lah coverage || echo "Pasta coverage não encontrada"
+          echo "=== Primeiras linhas do lcov.info ==="
+          head -20 coverage/lcov.info || echo "Arquivo lcov.info não encontrado"
 
       - name: Build project
         run: yarn build
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2
+        with:
+          args: >
+            -Dsonar.projectBaseDir=.
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
