@@ -90,7 +90,7 @@ describe("LoginView.vue", () => {
     await wrapper.vm.$nextTick();
 
     expect(mockRouterPush).toHaveBeenCalledWith({
-      name: "Movimentação Financeira",
+      name: "BI Financeiro",
     });
   });
 
