@@ -2,14 +2,14 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Copia dependências primeiro (para cache eficiente)
+# Copia dependências primeiro (cache)
 COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
 
 # Copia o restante do código
 COPY . .
 
-# Define e propaga o ambiente
+# Define o ambiente
 ARG NODE_ENV=development
 ENV NODE_ENV=${NODE_ENV}
 
@@ -18,5 +18,5 @@ RUN if [ "$NODE_ENV" = "production" ]; then yarn build --mode production; else e
 
 EXPOSE 5173
 
-# O comando final é controlado via docker-compose (flexível)
+# O docker-compose vai definir o comando correto
 CMD ["sh", "-c", "echo 'Use docker-compose to start the right mode (dev or prod)'"]
