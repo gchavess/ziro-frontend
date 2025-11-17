@@ -45,6 +45,27 @@
           autocomplete="new-password"
         />
 
+        <div style="display: flex">
+          <input
+            type="checkbox"
+            id="aceitarTermos"
+            v-model="aceitouTermos"
+            style="
+              height: 18px;
+              width: 18px;
+              margin-right: 12px;
+              accent-color: var(--color-primary);
+              outline: none;
+              box-shadow: none;
+            "
+          />
+
+          <p class="termos-privacidade">
+            Li e aceito os
+            <a @click="abrirTermosCondicoes">Termos e Condições</a> de Uso do
+            Ziro
+          </p>
+        </div>
         <button type="submit" class="btn-register">Cadastrar</button>
       </form>
 
@@ -70,10 +91,18 @@ export default class CadastroView extends Vue {
   private email: string = "";
   private confirmPassword: string = "";
   private password: string = "";
+  public aceitouTermos: boolean = false;
 
   public async handleRegister() {
+    if (!this.aceitouTermos) {
+      window.$toast.error(
+        "Leia e aceite os Termos de Uso do Asaas para criar a conta."
+      );
+      return;
+    }
+
     if (this.password !== this.confirmPassword) {
-      alert("As senhas não coincidem!");
+      window.$toast.error("As senhas não coincidem");
       return;
     }
 
@@ -95,8 +124,15 @@ export default class CadastroView extends Vue {
   }
 
   public goToLogin() {
-    // Redirecionar para a tela de login (exemplo)
     this.$router.push({ name: "Login" });
+  }
+
+  public abrirTermosCondicoes() {
+    const url = this.$router.resolve({
+      name: "Termos e Condições de Uso",
+    }).href;
+
+    window.open(url, "_blank");
   }
 }
 </script>
@@ -174,10 +210,16 @@ export default class CadastroView extends Vue {
   font-size: 1.2rem;
   cursor: pointer;
   transition: background-color 0.3s;
+  margin-top: 0.9rem;
 }
 
 .btn-register:hover {
   background-color: var(--color-primary-light);
+}
+
+.termos-privacidade {
+  font-size: 0.9rem;
+  color: #444;
 }
 
 .register-footer {
@@ -186,6 +228,7 @@ export default class CadastroView extends Vue {
   color: #444;
 }
 
+.termos-privacidade a,
 .register-footer a {
   color: var(--color-primary);
   font-weight: 600;
@@ -193,7 +236,8 @@ export default class CadastroView extends Vue {
   cursor: pointer;
 }
 
-.register-footer a:hover {
+.register-footer a:hover,
+.termos-privacidade a:hover {
   text-decoration: underline;
 }
 

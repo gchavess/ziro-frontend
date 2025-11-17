@@ -95,7 +95,11 @@ export default class App extends Vue {
   }
 
   public get mostrarBarraNavegacao(): boolean {
-    const nomesQueNaoMostramBarra = ["Login", "Cadastro"];
+    const nomesQueNaoMostramBarra = [
+      "Login",
+      "Cadastro",
+      "Termos e Condições de Uso",
+    ];
     return !nomesQueNaoMostramBarra.includes(this.route.name as string);
   }
 
