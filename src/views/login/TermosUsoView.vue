@@ -4,7 +4,7 @@
       <h1 class="termos-title">Termos e Condições de Uso</h1>
 
       <div @submit.prevent="handleRegister" class="termos-form">
-        <span>Última atualização: 22/05/2025</span>
+        <span>Última atualização: 18/10/2025</span>
 
         <span>
           Bem-vindo ao <b>Ziro</b>, uma aplicação web voltada à gestão

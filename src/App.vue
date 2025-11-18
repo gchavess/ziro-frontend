@@ -106,7 +106,8 @@ export default class App extends Vue {
   private validarAutenticacao() {
     AuthService.validarToken().catch(() => {
       clearAuth();
-      this.$router.push({ name: "Login" });
+
+      if (this.mostrarBarraNavegacao) this.$router.push({ name: "Login" });
     });
   }
 
