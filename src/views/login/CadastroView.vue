@@ -96,7 +96,7 @@ export default class CadastroView extends Vue {
   public async handleRegister() {
     if (!this.aceitouTermos) {
       window.$toast.error(
-        "Leia e aceite os Termos de Uso do Asaas para criar a conta."
+        "Leia e aceite os Termos de Uso do Ziro para criar a conta."
       );
       return;
     }
