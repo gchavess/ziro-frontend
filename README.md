@@ -87,8 +87,6 @@ cd ziro-backend
 docker compose up -d --build
 ```
 
-> Observação: se precisar alterar variáveis de ambiente (por exemplo `POSTGRES_USER`, `POSTGRES_PASSWORD`, `SPRING_DATASOURCE_URL`), edite o arquivo `.env` ou o `docker-compose.yml` antes de subir os serviços.
-
 ### 3. API rodando em:
 ```text
 http://localhost:8080/
