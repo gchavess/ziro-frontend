@@ -19,6 +19,10 @@ Acesse a versão online do Ziro:
 email: demo1@ziro.com  
 senha: Demo123
 ```
+```makefile
+email: demo2@ziro.com  
+senha: Demo123
+```
 ---
 
 ## 🚀 **Tecnologias Utilizadas**
