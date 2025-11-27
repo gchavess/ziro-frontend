@@ -16,8 +16,8 @@ Acesse a versão online do Ziro:
 *(Apenas para testes — não use credenciais reais)*
 
 ```makefile
-email: demo@ziro.com  
-senha: 123456
+email: demo1@ziro.com  
+senha: Demo123
 ```
 ---
 
