@@ -33,6 +33,16 @@ A plataforma permite registrar e analisar lançamentos, visualizar saldos, acomp
 
 ---
 
+## 🔍 Qualidade do Código — SonarCloud
+
+### Frontend
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=gchavess_ziro-frontend&metric=alert_status)](https://sonarcloud.io/project/overview?id=gchavess_ziro-frontend)
+
+### Backend
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=gchavess_ziro-backend&metric=alert_status)](https://sonarcloud.io/project/overview?id=gchavess_ziro-backend)
+
+---
+
 ## 🏗️ **Arquitetura do Projeto**
 
 - Arquitetura baseada em **MVC (Model–View–Controller)**.  
