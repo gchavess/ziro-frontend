@@ -7,6 +7,20 @@ A plataforma permite registrar e analisar lançamentos, visualizar saldos, acomp
 
 ---
 
+## 🌐 **Ambiente de Produção**
+
+Acesse a versão online do Ziro:  
+👉 **http://webziro.duckdns.org:5173/login**
+
+### 🔑 Usuário de Demonstração  
+*(Apenas para testes — não use credenciais reais)*
+
+```makefile
+email: demo@ziro.com  
+senha: 123456
+```
+---
+
 ## 🚀 **Tecnologias Utilizadas**
 
 ### **Frontend**
