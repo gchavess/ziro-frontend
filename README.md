@@ -64,12 +64,13 @@ docker compose up -d --build
 ### 4. Acessar no navegador
 
 ```bash
-[docker compose up -d --build](http://localhost:5173/)
+http://localhost:5173/
 ```
 ---
 
 👤 Autor
 
 Gustavo Chaves
+
 🔗 GitHub: https://github.com/gchavess
 
